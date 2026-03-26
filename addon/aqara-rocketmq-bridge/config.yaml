@@ -1,0 +1,33 @@
+name: Aqara RocketMQ Bridge
+version: 0.0.0-dev
+slug: aqara_rocketmq_bridge
+description: Aqara RocketMQ bridge for Home Assistant
+url: https://github.com/Darkdragon14/aqara-rocketmq-bridge
+image: ghcr.io/darkdragon14/aqara-rocketmq-bridge-addon-{arch}
+panel_icon: mdi:access-point-network
+arch:
+  - amd64
+  - aarch64
+startup: services
+boot: auto
+init: false
+ports:
+  8080/tcp: 8080
+ports_description:
+  8080/tcp: Aqara bridge HTTP API
+map:
+  - config:rw
+options:
+  app_id: ""
+  key_id: ""
+  app_key: ""
+  bridge_token: ""
+  mq_namesrv_addr: "3rd-subscription.aqara.cn:9876"
+  bridge_public_url: ""
+schema:
+  app_id: str
+  key_id: str
+  app_key: password
+  bridge_token: password
+  mq_namesrv_addr: str
+  bridge_public_url: str

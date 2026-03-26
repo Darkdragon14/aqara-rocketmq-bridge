@@ -1,0 +1,7 @@
+build_from:
+  amd64: ghcr.io/home-assistant/amd64-base-debian:bookworm
+  aarch64: ghcr.io/home-assistant/aarch64-base-debian:bookworm
+labels:
+  org.opencontainers.image.title: aqara-rocketmq-bridge
+  org.opencontainers.image.description: Aqara RocketMQ bridge for Home Assistant
+  org.opencontainers.image.source: https://github.com/Darkdragon14/aqara-rocketmq-bridge

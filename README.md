@@ -70,6 +70,21 @@ docker run --rm -p 8080:8080 \
 
 Replace `ghcr.io/darkdragon14/aqara-rocketmq-bridge:main` with a version tag if you publish release tags.
 
+## Home Assistant add-on
+
+The add-on uses a prebuilt GHCR image instead of relying on a local build during installation.
+
+- add-on image reference: `ghcr.io/darkdragon14/aqara-rocketmq-bridge-addon-{arch}`
+- supported add-on architectures: `amd64`, `aarch64`
+- the Supervisor resolves `{arch}` and pulls the matching image for the host
+
+When you change `addon/aqara-rocketmq-bridge/config.yaml`, keep the `version` field aligned with the published add-on image tags.
+
+## Published images
+
+- standard bridge container: `ghcr.io/darkdragon14/aqara-rocketmq-bridge`
+- Home Assistant add-on images: `ghcr.io/darkdragon14/aqara-rocketmq-bridge-addon-{arch}`
+
 ## Cloudflare tunnel labels
 
 If you use `ghcr.io/darkdragon14/docker-cloudflare-tunnel-sync`, expose the bridge with Docker labels on the bridge container:
@@ -82,6 +97,13 @@ labels:
 ```
 
 The tunnel sync controller reads these labels, then manages the Cloudflare tunnel ingress and DNS records from Docker metadata.
+
+## CI/CD
+
+- `/.github/workflows/tests.yml` runs Maven tests for the Java service
+- `/.github/workflows/ghcr.yml` publishes the standard bridge image to GHCR for `amd64` and `arm64`
+- `/.github/workflows/addon-checks.yml` lints and validation-builds the Home Assistant add-on
+- `/.github/workflows/addon-ghcr.yml` publishes the add-on images to GHCR for `amd64` and `aarch64`
 
 ## Example SSE payload
 

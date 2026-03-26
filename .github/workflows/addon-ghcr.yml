@@ -1,0 +1,99 @@
+name: Publish add-on image
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  ADDON_IMAGE: ghcr.io/${{ github.repository_owner }}/aqara-rocketmq-bridge-addon
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.tags.outputs.tags }}
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read add-on version
+        id: version
+        shell: bash
+        run: |
+          version=$(python3 - <<'PY'
+from pathlib import Path
+for line in Path('addon/aqara-rocketmq-bridge/config.yaml').read_text().splitlines():
+    if line.startswith('version:'):
+        print(line.split(':', 1)[1].strip())
+        break
+PY
+)
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Compute image tags
+        id: tags
+        shell: bash
+        run: |
+          tags="${{ steps.version.outputs.version }}"
+          if [[ "${GITHUB_REF_TYPE}" == "branch" ]]; then
+            tags="${tags} main"
+          fi
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            tags="${tags} ${GITHUB_REF_NAME} latest"
+          fi
+          tags="${tags} sha-${GITHUB_SHA::7}"
+          tags=$(printf '%s\n' ${tags} | awk 'NF' | sort -u | tr '\n' ' ')
+          echo "tags=${tags}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            build_from: ghcr.io/home-assistant/amd64-base-debian:bookworm
+          - arch: aarch64
+            platform: linux/arm64
+            build_from: ghcr.io/home-assistant/aarch64-base-debian:bookworm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.arch }} image
+        shell: bash
+        run: |
+          for tag in ${{ needs.prepare.outputs.tags }}; do
+            docker buildx build \
+              --platform ${{ matrix.platform }} \
+              --file addon/aqara-rocketmq-bridge/Dockerfile \
+              --build-arg BUILD_FROM=${{ matrix.build_from }} \
+              --tag ${ADDON_IMAGE}-${{ matrix.arch }}:${tag} \
+              --push \
+              .
+          done
