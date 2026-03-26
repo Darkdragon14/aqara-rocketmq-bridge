@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>fr.darkdragon</groupId>
+    <groupId>darkdragon.aqara</groupId>
     <artifactId>aqara-rocketmq-bridge</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>aqara-rocketmq-bridge</name>
