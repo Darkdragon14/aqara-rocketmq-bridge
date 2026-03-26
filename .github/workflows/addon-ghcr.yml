@@ -11,9 +11,6 @@ permissions:
   contents: read
   packages: write
 
-env:
-  ADDON_IMAGE: ghcr.io/${{ github.repository_owner }}/aqara-rocketmq-bridge-addon
-
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -81,12 +78,13 @@ jobs:
       - name: Build and push ${{ matrix.arch }} image
         shell: bash
         run: |
+          image=$(printf '%s' "ghcr.io/${GITHUB_REPOSITORY_OWNER}/aqara-rocketmq-bridge-addon-${{ matrix.arch }}" | tr '[:upper:]' '[:lower:]')
           for tag in ${{ needs.prepare.outputs.tags }}; do
             docker buildx build \
               --platform ${{ matrix.platform }} \
               --file addon/aqara-rocketmq-bridge/Dockerfile \
               --build-arg BUILD_FROM=${{ matrix.build_from }} \
-              --tag ${ADDON_IMAGE}-${{ matrix.arch }}:${tag} \
+              --tag ${image}:${tag} \
               --push \
               .
           done
