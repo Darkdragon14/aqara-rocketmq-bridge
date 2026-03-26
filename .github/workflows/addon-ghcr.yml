@@ -29,14 +29,7 @@ jobs:
         id: version
         shell: bash
         run: |
-          version=$(python3 - <<'PY'
-from pathlib import Path
-for line in Path('addon/aqara-rocketmq-bridge/config.yaml').read_text().splitlines():
-    if line.startswith('version:'):
-        print(line.split(':', 1)[1].strip())
-        break
-PY
-)
+          version=$(grep '^version:' addon/aqara-rocketmq-bridge/config.yaml | awk '{print $2}')
           echo "version=${version}" >> "$GITHUB_OUTPUT"
 
       - name: Compute image tags
