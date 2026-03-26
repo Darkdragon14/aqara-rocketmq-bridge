@@ -1,0 +1,32 @@
+services:
+  aqara-rocketmq-bridge:
+    image: ghcr.io/darkdragon14/aqara-rocketmq-bridge:main
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ID: your-app-id
+      KEY_ID: your-key-id
+      APP_KEY: your-app-key
+      BRIDGE_TOKEN: change-me
+      MQ_NAMESRV_ADDR: 3rd-subscription.aqara.cn:9876
+      BRIDGE_PUBLIC_URL: https://example.com
+    labels:
+      cloudflare.tunnel.enable: "true"
+      cloudflare.tunnel.hostname: example.com
+      cloudflare.tunnel.service: http://aqara-rocketmq-bridge:8080
+
+  docker-cloudflare-tunnel-sync:
+    image: ghcr.io/darkdragon14/docker-cloudflare-tunnel-sync:latest
+    restart: unless-stopped
+    environment:
+      CF_API_TOKEN: your-cloudflare-api-token
+      CF_ACCOUNT_ID: your-cloudflare-account-id
+      CF_TUNNEL_ID: your-cloudflare-tunnel-id
+      SYNC_MANAGED_TUNNEL: "true"
+      SYNC_MANAGED_DNS: "true"
+      SYNC_DELETE_DNS: "true"
+      SYNC_MANAGED_ACCESS: "false"
+      SYNC_POLL_INTERVAL: 30s
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro

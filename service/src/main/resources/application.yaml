@@ -1,0 +1,28 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+bridge:
+  app-id: ${APP_ID:}
+  key-id: ${KEY_ID:}
+  app-key: ${APP_KEY:}
+  bridge-token: ${BRIDGE_TOKEN:}
+  mq-namesrv-addr: ${MQ_NAMESRV_ADDR:3rd-subscription.aqara.cn:9876}
+  bridge-public-url: ${BRIDGE_PUBLIC_URL:}
+  rocketmq-enabled: ${ROCKETMQ_ENABLED:true}
+  heartbeat-interval-seconds: ${HEARTBEAT_INTERVAL_SECONDS:15}
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    darkdragon.aqara.bridge: ${APP_LOG_LEVEL:INFO}
