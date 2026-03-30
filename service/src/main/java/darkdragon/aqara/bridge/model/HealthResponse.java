@@ -8,7 +8,6 @@ public record HealthResponse(
         boolean rocketmqStarted,
         Instant lastMessageAt,
         String publicUrl,
-        String topic,
         String nameserver,
         String lastError
 ) {

@@ -26,13 +26,14 @@ class BridgeApplicationTest {
     private EventBroadcaster eventBroadcaster;
 
     @Test
-    void healthIncludesPublicUrl() {
+    void healthIncludesPublicUrlWithoutTopic() {
         webTestClient.get()
                 .uri("/health")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.publicUrl").isEqualTo("https://aqara.darkdragon.fr")
+                .jsonPath("$.topic").doesNotExist()
                 .jsonPath("$.rocketmqEnabled").isEqualTo(false);
     }
 

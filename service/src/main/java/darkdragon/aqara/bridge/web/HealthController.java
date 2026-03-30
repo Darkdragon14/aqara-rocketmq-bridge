@@ -30,7 +30,6 @@ public class HealthController {
                 started,
                 rocketMqHealth.getLastMessageAt(),
                 bridgeProperties.getBridgePublicUrl(),
-                bridgeProperties.getAppId(),
                 bridgeProperties.getMqNamesrvAddr(),
                 rocketMqHealth.getLastError()
         );
