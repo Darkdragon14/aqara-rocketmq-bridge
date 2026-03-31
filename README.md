@@ -38,7 +38,7 @@ You need an Aqara developer project before running the bridge.
 ## Endpoints
 
 - `GET /health` returns bridge and RocketMQ status.
-- `GET /events` streams normalized `resource_report` messages over SSE.
+- `GET /events` streams batched latest-state updates over SSE.
 
 `GET /events` requires `Authorization: Bearer <BRIDGE_TOKEN>`.
 
@@ -51,6 +51,7 @@ You need an Aqara developer project before running the bridge.
 - `BRIDGE_PUBLIC_URL` required public URL exposed through Cloudflare Tunnel or another reverse proxy
 - `MQ_NAMESRV_ADDR` defaults to `3rd-subscription.aqara.cn:9876`
 - `ROCKETMQ_ENABLED` optional, defaults to `true`
+- `BATCH_INTERVAL_MS` optional, defaults to `100`
 - `SERVER_PORT` optional, defaults to `8080`
 
 `BRIDGE_PUBLIC_URL` is required because the bridge is meant to be addressed through a stable external URL such as `https://example.com`.
@@ -109,12 +110,18 @@ The tunnel sync controller reads these labels, then manages the Cloudflare tunne
 
 ```json
 {
-  "type": "resource_report",
-  "subjectId": "lumi.xxx",
-  "resourceId": "3.51.85",
-  "value": "1",
-  "time": 1710000000000,
-  "statusCode": 0
+  "type": "snapshot",
+  "cursor": 42,
+  "events": [
+    {
+      "type": "resource_report",
+      "subjectId": "lumi.xxx",
+      "resourceId": "3.51.85",
+      "value": "1",
+      "time": 1710000000000,
+      "statusCode": 0
+    }
+  ]
 }
 ```
 

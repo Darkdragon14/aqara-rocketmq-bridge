@@ -20,6 +20,7 @@ bridge:
   mq-namesrv-addr: ${MQ_NAMESRV_ADDR:3rd-subscription.aqara.cn:9876}
   bridge-public-url: ${BRIDGE_PUBLIC_URL:}
   rocketmq-enabled: ${ROCKETMQ_ENABLED:true}
+  batch-interval-ms: ${BATCH_INTERVAL_MS:100}
   heartbeat-interval-seconds: ${HEARTBEAT_INTERVAL_SECONDS:15}
 
 logging:

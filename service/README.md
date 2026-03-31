@@ -4,7 +4,7 @@ Spring Boot service that:
 
 - connects to Aqara RocketMQ using `APP_ID`, `KEY_ID`, and `APP_KEY`;
 - consumes `resource_report` messages from the Aqara topic named after `APP_ID`;
-- exposes `GET /health` and `GET /events`;
+- exposes `GET /health` and a batched SSE `GET /events` stream;
 - protects `GET /events` with `BRIDGE_TOKEN`.
 
 ## Main configuration
@@ -15,6 +15,7 @@ Spring Boot service that:
 - `BRIDGE_TOKEN`
 - `MQ_NAMESRV_ADDR`
 - `BRIDGE_PUBLIC_URL`
+- `BATCH_INTERVAL_MS`
 
 `BRIDGE_PUBLIC_URL` is required.
 

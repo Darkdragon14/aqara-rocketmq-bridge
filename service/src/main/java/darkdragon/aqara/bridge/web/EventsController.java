@@ -1,7 +1,7 @@
 package darkdragon.aqara.bridge.web;
 
 import darkdragon.aqara.bridge.config.BridgeProperties;
-import darkdragon.aqara.bridge.model.AqaraEvent;
+import darkdragon.aqara.bridge.model.AqaraEventBatch;
 import darkdragon.aqara.bridge.stream.EventBroadcaster;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class EventsController {
@@ -24,13 +25,16 @@ public class EventsController {
 
     @GetMapping(path = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<Object>> streamEvents() {
-        Flux<ServerSentEvent<Object>> initial = Flux.just(ServerSentEvent.builder((Object) null)
-                .event("ready")
-                .comment("connected")
-                .build());
+        AqaraEventBatch snapshot = eventBroadcaster.snapshot();
+        AtomicLong lastCursor = new AtomicLong(snapshot.cursor());
 
-        Flux<ServerSentEvent<Object>> events = eventBroadcaster.events()
-                .map(this::toEventMessage);
+        Flux<ServerSentEvent<Object>> initial = Flux.just(toBatchMessage(snapshot));
+
+        Flux<ServerSentEvent<Object>> events = Flux.interval(Duration.ofMillis(bridgeProperties.getBatchIntervalMs()))
+                .<ServerSentEvent<Object>>handle((sequence, sink) -> eventBroadcaster.batchSince(lastCursor.get()).ifPresent(batch -> {
+                    lastCursor.set(batch.cursor());
+                    sink.next(toBatchMessage(batch));
+                }));
 
         Flux<ServerSentEvent<Object>> heartbeat = Flux.interval(
                         Duration.ofSeconds(bridgeProperties.getHeartbeatIntervalSeconds())
@@ -43,10 +47,10 @@ public class EventsController {
         return Flux.concat(initial, Flux.merge(events, heartbeat));
     }
 
-    private ServerSentEvent<Object> toEventMessage(AqaraEvent event) {
-        return ServerSentEvent.builder((Object) event)
-                .event(event.type())
-                .id(event.msgId() != null ? event.msgId() : null)
+    private ServerSentEvent<Object> toBatchMessage(AqaraEventBatch batch) {
+        return ServerSentEvent.builder((Object) batch)
+                .event(batch.type())
+                .id(Long.toString(batch.cursor()))
                 .build();
     }
 }

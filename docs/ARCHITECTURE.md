@@ -1,6 +1,6 @@
 # Architecture Notes
 
-The bridge consumes Aqara RocketMQ messages and streams them to Home Assistant over SSE.
+The bridge consumes Aqara RocketMQ messages, keeps the latest state per `(subjectId, resourceId)`, and streams batched updates to Home Assistant over SSE.
 
 Home Assistant remains the owner of Aqara Open API token refresh and resource subscription setup.
 
@@ -12,7 +12,8 @@ This split keeps the Java bridge focused on transport reliability and avoids dup
 Aqara RocketMQ
 -> Apache RocketMQ Java consumer
 -> resource_report parser
--> in-memory SSE broadcaster
+-> in-memory latest-state store
+-> batched SSE snapshot/delta stream
 -> Home Assistant integration
 ```
 

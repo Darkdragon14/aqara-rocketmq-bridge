@@ -1,6 +1,7 @@
 package darkdragon.aqara.bridge.config;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -28,6 +29,10 @@ public class BridgeProperties {
 
     private boolean rocketmqEnabled = true;
 
+    @Positive
+    private long batchIntervalMs = 100;
+
+    @Positive
     private long heartbeatIntervalSeconds = 15;
 
     public String getAppId() {
@@ -88,6 +93,14 @@ public class BridgeProperties {
 
     public long getHeartbeatIntervalSeconds() {
         return heartbeatIntervalSeconds;
+    }
+
+    public long getBatchIntervalMs() {
+        return batchIntervalMs;
+    }
+
+    public void setBatchIntervalMs(long batchIntervalMs) {
+        this.batchIntervalMs = batchIntervalMs;
     }
 
     public void setHeartbeatIntervalSeconds(long heartbeatIntervalSeconds) {
