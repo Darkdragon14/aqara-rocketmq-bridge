@@ -1,4 +1,5 @@
 ---
+layout: default
 title: Setup Guide
 nav_order: 1
 description: Set up the Aqara RocketMQ bridge for Home Assistant Container or Home Assistant OS.
