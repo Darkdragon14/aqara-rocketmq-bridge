@@ -21,6 +21,6 @@ Aqara RocketMQ
 
 The service is designed to run locally on the Docker host or inside a Home Assistant add-on container.
 
-The externally reachable address is provided through `BRIDGE_PUBLIC_URL`, which is required. The bridge does not manage Cloudflare directly and does not hardcode a domain.
+The bridge stores a canonical address in `BRIDGE_PUBLIC_URL`, which is required and reported by `/health`. Aqara messages still arrive through RocketMQ, so the bridge does not rely on HTTP callbacks and does not manage Cloudflare directly.
 
-`MQ_NAMESRV_ADDR` remains configurable even though Aqara documentation currently shows `3rd-subscription.aqara.cn:9876` as the documented RocketMQ nameserver example.
+`MQ_NAMESRV_ADDR` remains configurable. Aqara documentation shows `3rd-subscription.aqara.cn:9876` as an example, but the correct value is the one displayed in your own `Message push` page.

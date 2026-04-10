@@ -48,13 +48,13 @@ You need an Aqara developer project before running the bridge.
 - `KEY_ID`
 - `APP_KEY`
 - `BRIDGE_TOKEN`
-- `BRIDGE_PUBLIC_URL` required public URL exposed through Cloudflare Tunnel or another reverse proxy
-- `MQ_NAMESRV_ADDR` defaults to `3rd-subscription.aqara.cn:9876`
+- `BRIDGE_PUBLIC_URL` required canonical URL reported by `/health`
+- `MQ_NAMESRV_ADDR` service default is `3rd-subscription.aqara.cn:9876`, but you should use the `MQ message subscription address` shown in Aqara `Message push`
 - `ROCKETMQ_ENABLED` optional, defaults to `true`
 - `BATCH_INTERVAL_MS` optional, defaults to `100`
 - `SERVER_PORT` optional, defaults to `8080`
 
-`BRIDGE_PUBLIC_URL` is required because the bridge is meant to be addressed through a stable external URL such as `https://example.com`.
+`BRIDGE_PUBLIC_URL` is required, but Aqara does not send messages to that URL. The bridge consumes RocketMQ directly, and Home Assistant uses the configured `Bridge URL` to call `/health` and `/events`.
 
 ## Local run
 
@@ -64,10 +64,12 @@ docker run --rm -p 8080:8080 \
   -e KEY_ID=your-key-id \
   -e APP_KEY=your-app-key \
   -e BRIDGE_TOKEN=change-me \
-  -e MQ_NAMESRV_ADDR=3rd-subscription.aqara.cn:9876 \
-  -e BRIDGE_PUBLIC_URL=https://example.com \
+  -e MQ_NAMESRV_ADDR=your-message-push-nameserver \
+  -e BRIDGE_PUBLIC_URL=https://bridge.example.com \
   ghcr.io/darkdragon14/aqara-rocketmq-bridge:main
 ```
+
+Copy `MQ_NAMESRV_ADDR` from `MQ message subscription address` on the Aqara `Message push` page.
 
 Replace `ghcr.io/darkdragon14/aqara-rocketmq-bridge:main` with a version tag if you publish release tags.
 

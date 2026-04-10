@@ -17,7 +17,7 @@ Spring Boot service that:
 - `BRIDGE_PUBLIC_URL`
 - `BATCH_INTERVAL_MS`
 
-`BRIDGE_PUBLIC_URL` is required.
+`BRIDGE_PUBLIC_URL` is required and is currently reported by `/health`. Aqara messages still arrive through RocketMQ, not through callbacks to that URL.
 
 ## Build
 
