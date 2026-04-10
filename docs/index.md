@@ -26,6 +26,7 @@ Useful links:
 - Home Assistant integration repository: <https://github.com/Darkdragon14/ha-aqara-devices>
 
 ## How it works
+{: #how-it-works }
 
 ```text
 Aqara RocketMQ -> aqara-rocketmq-bridge -> SSE -> ha_aqara_devices -> Home Assistant
