@@ -16,12 +16,14 @@ docker run --rm -p 8080:8080 \
   -e KEY_ID=your-key-id \
   -e APP_KEY=your-app-key \
   -e BRIDGE_TOKEN=change-me \
-  -e MQ_NAMESRV_ADDR=3rd-subscription.aqara.cn:9876 \
-  -e BRIDGE_PUBLIC_URL=https://example.com \
+  -e MQ_NAMESRV_ADDR=your-message-push-nameserver \
+  -e BRIDGE_PUBLIC_URL=https://bridge.example.com \
   ghcr.io/darkdragon14/aqara-rocketmq-bridge:main
 ```
 
-`BRIDGE_PUBLIC_URL` is required and should match the URL exposed through your reverse proxy or Cloudflare tunnel.
+Copy `MQ_NAMESRV_ADDR` from `MQ message subscription address` on the Aqara `Message push` page.
+
+`BRIDGE_PUBLIC_URL` is required, but Aqara does not send messages to it. It is the canonical bridge URL reported by `/health`; if you expose the bridge through a reverse proxy or Cloudflare tunnel, use that URL.
 
 When using `ghcr.io/darkdragon14/docker-cloudflare-tunnel-sync`, add labels such as `cloudflare.tunnel.enable=true`, `cloudflare.tunnel.hostname=example.com`, and `cloudflare.tunnel.service=http://aqara-rocketmq-bridge:8080` on the bridge container.
 
