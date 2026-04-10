@@ -9,9 +9,12 @@ enable_copy_code_button: true
 back_to_top: true
 back_to_top_text: Back to top
 permalink: pretty
+nav_enabled: true
+toc:
+  enabled: true
 
 aux_links:
-  GitHub Repository: https://github.com/Darkdragon14/aqara-rocketmq-bridge
+  Aqara Rocket MQ Bridge: https://github.com/Darkdragon14/aqara-rocketmq-bridge
   Aqara Devices Integration: https://github.com/Darkdragon14/ha-aqara-devices
 
 aux_links_new_tab: true
