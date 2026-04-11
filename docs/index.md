@@ -48,6 +48,14 @@ The `ha_aqara_devices` integration remains responsible for Aqara Open API authen
 - a stable URL or reachable address for the bridge;
 - the `ha_aqara_devices` Home Assistant integration.
 
+Most of the Aqara values used in this guide come from the Aqara developer console:
+
+- `APP_ID`: your Aqara project ID;
+- `KEY_ID` and `APP_KEY`: from `Key management`;
+- `MQ_NAMESRV_ADDR`: from `Message push`.
+
+`BRIDGE_TOKEN` is different: Aqara does not provide it. You choose this secret yourself, and Home Assistant must use the same value to connect to the bridge.
+
 ## Step 1 - Create an account Aqara developper
 
 1. Create an account at <https://developer.aqara.com/> and open the console.
@@ -82,14 +90,9 @@ The values shown by Aqara map directly to the bridge settings:
 | `accessKey` | `KEY_ID` |
 | `secretKey` | `APP_KEY` |
 
-You can copy `MQ_NAMESRV_ADDR` directly from this same `Message push` screen. In Aqara it is shown as `MQ message subscription address`, in the same area as `topic`, `group`, `accessKey`, and `secretKey`.
+This Aqara admin screen shows where to find the selected `KEY_ID` and the values you need to copy into the bridge: `MQ_NAMESRV_ADDR`, `APP_ID`, `KEY_ID`, and `APP_KEY`.
 
-![Aqara Message Push mode reference screen](assets/images/aqara-message-push.png)
-
-This reference image comes from Aqara's official Message Push documentation.
-
-> Aqara documentation reference: <https://opendoc.aqara.com/en/docs/developmanual/messagePush/messagePushMode.html>
-{: .note }
+![Aqara admin Message Push screen showing KEY_ID, MQ_NAMESRV_ADDR, APP_ID, and APP_KEY](assets/images/message-push-admin.png)
 
 Do not assume `3rd-subscription.aqara.cn:9876` is your real nameserver. Aqara uses that value as an example in their documentation. The correct `MQ_NAMESRV_ADDR` is the exact value shown in your own `Message push` page.
 
