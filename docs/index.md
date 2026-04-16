@@ -272,6 +272,8 @@ The integration asks for these fields:
 | `App key` | The same Aqara `APP_KEY` |
 | `Key ID` | The same Aqara `KEY_ID` |
 
+If your Aqara account region is set to `Other`, that value may not be selectable in the integration. In that case, switch the Aqara account region to another region supported by the Aqara V3 API, as available in the Aqara Developer console, then re-add the affected device in the Aqara Home app before retrying discovery.
+
 ### 3. Enter the authorization code
 
 After the first form, Aqara sends a verification code to your email address or phone number.
@@ -392,6 +394,16 @@ Check all of the following:
 - subscription mode is `User-defined subscription mode`;
 - the integration finished setup and entered the authorization code successfully;
 - supported devices are present in the Aqara account tied to the project.
+
+### A device is not discovered when the Aqara account region is `Other`
+
+If your Aqara account region is set to `Other`, that value may not be available in the integration or Aqara project settings. In that case, one or more devices may not be discovered even if the rest of the setup looks correct.
+
+Try this:
+
+- switch the Aqara account region to another region supported by the Aqara V3 API, as available in the Aqara Developer console;
+- re-add or reinstall the affected device in the Aqara Home app;
+- rerun the integration setup with the matching region.
 
 ### The add-on repository does not appear in Home Assistant OS
 
