@@ -56,6 +56,39 @@ Most of the Aqara values used in this guide come from the Aqara developer consol
 
 `BRIDGE_TOKEN` is different: Aqara does not provide it. You choose this secret yourself, and Home Assistant must use the same value to connect to the bridge.
 
+## Aqara API quotas and sizing
+
+Aqara documents the following limits for ordinary developer accounts:
+
+- `100,000` API calls per month on the free quota;
+- `2,000,000` API calls cumulatively;
+- `300` API calls per `5 minutes` for non-paid developer accounts;
+- up to `80` accessible devices for non-paid enterprise or individual developers;
+- up to `300` accessible devices for individual paid developers.
+
+The current Home Assistant integration behavior can consume roughly this many Aqara Open API calls per month for the following device types:
+
+- `FP2` -> `~43,200 / month`
+- `FP300` -> `~25,920 / month`
+- `M3` -> `~8,640 / month`
+- `G3` -> `~17,280 / month`
+
+Use this estimate to size your setup:
+
+```text
+Estimated total / month ~= FP2*43200 + FP300*25920 + M3*8640 + G3*17280
+```
+
+Examples:
+
+- `1 FP2 + 1 FP300 + 1 M3 + 1 G3` -> `~95,040 / month`
+- `2 FP2 + 1 G3` -> `~103,680 / month`
+
+{: .warning }
+> Aqara also documents a separate limit of `300 API calls per 5 minutes` for non-paid developer accounts. If you manage many devices, keep extra margin for setup, token refresh, resubscription, and other short bursts.
+
+These values are estimates based on the current integration behavior. Other Aqara API calls can also consume quota.
+
 ## Step 1 - Create an account Aqara developper
 
 1. Create an account at <https://developer.aqara.com/> and open the console.
@@ -288,39 +321,6 @@ Once the integration starts successfully, it will:
 2. connect to `GET /events` with `Authorization: Bearer <bridge token>`;
 3. call Aqara Open API subscription endpoints in `User-defined subscription mode`;
 4. create entities for supported Aqara devices.
-
-### Aqara API quotas and sizing
-
-Aqara documents the following limits for ordinary developer accounts:
-
-- `100,000` API calls per month on the free quota;
-- `2,000,000` API calls cumulatively;
-- `300` API calls per `5 minutes` for non-paid developer accounts;
-- up to `80` accessible devices for non-paid enterprise or individual developers;
-- up to `300` accessible devices for individual paid developers.
-
-The current Home Assistant integration behavior can consume roughly this many Aqara Open API calls per month for the following device types:
-
-- `FP2` -> `~43,200 / month`
-- `FP300` -> `~25,920 / month`
-- `M3` -> `~8,640 / month`
-- `G3` -> `~17,280 / month`
-
-Use this estimate to size your setup:
-
-```text
-Estimated total / month ~= FP2*43200 + FP300*25920 + M3*8640 + G3*17280
-```
-
-Examples:
-
-- `1 FP2 + 1 FP300 + 1 M3 + 1 G3` -> `~95,040 / month`
-- `2 FP2 + 1 G3` -> `~103,680 / month`
-
-{: .warning }
-> Aqara also documents a separate limit of `300 API calls per 5 minutes` for non-paid developer accounts. If you manage many devices, keep extra margin for setup, token refresh, resubscription, and other short bursts.
-
-These values are estimates based on the current integration behavior. Other Aqara API calls can also consume quota.
 
 ## Step 6 - Verify the bridge and the event stream
 
