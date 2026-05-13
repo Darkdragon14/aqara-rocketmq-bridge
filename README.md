@@ -75,6 +75,8 @@ Replace `ghcr.io/darkdragon14/aqara-rocketmq-bridge:main` with a version tag if 
 
 ## Home Assistant add-on
 
+[![Open your Home Assistant instance and add this add-on repository.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FDarkdragon14%2Faqara-rocketmq-bridge)
+
 The add-on uses a prebuilt GHCR image instead of relying on a local build during installation.
 
 - add-on image reference: `ghcr.io/darkdragon14/aqara-rocketmq-bridge-addon-{arch}`
