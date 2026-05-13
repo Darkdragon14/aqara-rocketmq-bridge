@@ -9,6 +9,16 @@ This repository provides:
 - a Home Assistant add-on for Home Assistant OS users;
 - a local SSE stream consumed by the `ha_aqara_devices` integration.
 
+## Home Assistant installation shortcuts
+
+Install the Home Assistant integration with HACS:
+
+[![Open your Home Assistant instance and open a repository inside HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Darkdragon14&repository=ha-aqara-devices)
+
+Add this bridge as a Home Assistant OS add-on repository:
+
+[![Open your Home Assistant instance and add this add-on repository.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FDarkdragon14%2Faqara-rocketmq-bridge)
+
 ## Runtime flow
 
 ```text
