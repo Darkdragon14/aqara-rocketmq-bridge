@@ -11,16 +11,10 @@ has_toc: true
 
 <p>
   <a href="https://github.com/Darkdragon14/ha-aqara-devices/stargazers">
-    <img src="https://img.shields.io/github/stars/Darkdragon14/ha-aqara-devices?style=flat&label=integration%20stars" alt="ha-aqara-devices GitHub stars">
+    <img src="https://img.shields.io/github/stars/Darkdragon14/ha-aqara-devices?style=flat&label=stars" alt="ha-aqara-devices GitHub stars">
   </a>
   <a href="https://github.com/Darkdragon14/ha-aqara-devices/releases">
-    <img src="https://img.shields.io/github/v/release/Darkdragon14/ha-aqara-devices?style=flat&label=integration" alt="ha-aqara-devices latest release">
-  </a>
-  <a href="https://github.com/Darkdragon14/aqara-rocketmq-bridge/stargazers">
-    <img src="https://img.shields.io/github/stars/Darkdragon14/aqara-rocketmq-bridge?style=flat&label=bridge%20stars" alt="aqara-rocketmq-bridge GitHub stars">
-  </a>
-  <a href="https://github.com/Darkdragon14/aqara-rocketmq-bridge/releases">
-    <img src="https://img.shields.io/github/v/release/Darkdragon14/aqara-rocketmq-bridge?style=flat&label=bridge" alt="aqara-rocketmq-bridge latest release">
+    <img src="https://img.shields.io/github/v/release/Darkdragon14/ha-aqara-devices?style=flat&label=release" alt="ha-aqara-devices latest release">
   </a>
 </p>
 
