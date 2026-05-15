@@ -9,6 +9,21 @@ has_toc: true
 
 # Aqara RocketMQ Bridge setup
 
+<p>
+  <a href="https://github.com/Darkdragon14/ha-aqara-devices/stargazers">
+    <img src="https://img.shields.io/github/stars/Darkdragon14/ha-aqara-devices?style=flat&label=integration%20stars" alt="ha-aqara-devices GitHub stars">
+  </a>
+  <a href="https://github.com/Darkdragon14/ha-aqara-devices/releases">
+    <img src="https://img.shields.io/github/v/release/Darkdragon14/ha-aqara-devices?style=flat&label=integration" alt="ha-aqara-devices latest release">
+  </a>
+  <a href="https://github.com/Darkdragon14/aqara-rocketmq-bridge/stargazers">
+    <img src="https://img.shields.io/github/stars/Darkdragon14/aqara-rocketmq-bridge?style=flat&label=bridge%20stars" alt="aqara-rocketmq-bridge GitHub stars">
+  </a>
+  <a href="https://github.com/Darkdragon14/aqara-rocketmq-bridge/releases">
+    <img src="https://img.shields.io/github/v/release/Darkdragon14/aqara-rocketmq-bridge?style=flat&label=bridge" alt="aqara-rocketmq-bridge latest release">
+  </a>
+</p>
+
 This page shows how to connect Aqara Message Queue Push to Home Assistant with the `aqara-rocketmq-bridge` service and the `ha_aqara_devices` integration.
 
 It covers two supported paths:
