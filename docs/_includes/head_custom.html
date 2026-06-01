@@ -1,0 +1,174 @@
+<style>
+  :root {
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2rem;
+    padding: 0.35rem 0.65rem;
+    border: 1px solid #d8d8d8;
+    border-radius: 999px;
+    background: #fff;
+    color: #27262b;
+    font: inherit;
+    font-size: 0.8rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+  }
+
+  .theme-toggle:hover,
+  .theme-toggle:focus-visible {
+    border-color: #7253ed;
+    box-shadow: 0 0 0 3px rgb(114 83 237 / 20%);
+    outline: none;
+  }
+
+  html[data-theme="dark"] body,
+  html[data-theme="dark"] .main-content-wrap,
+  html[data-theme="dark"] .main-content,
+  html[data-theme="dark"] .page-content,
+  html[data-theme="dark"] .site-footer {
+    background: #111827;
+    color: #e5e7eb;
+  }
+
+  html[data-theme="dark"] .side-bar,
+  html[data-theme="dark"] .site-header,
+  html[data-theme="dark"] .search,
+  html[data-theme="dark"] .search-input,
+  html[data-theme="dark"] .search-results,
+  html[data-theme="dark"] .main-header {
+    background: #0f172a;
+    color: #e5e7eb;
+    border-color: #334155;
+  }
+
+  html[data-theme="dark"] .site-title,
+  html[data-theme="dark"] .site-button,
+  html[data-theme="dark"] .nav-list .nav-list-item .nav-list-link,
+  html[data-theme="dark"] .nav-list .nav-list-item .nav-list-expander,
+  html[data-theme="dark"] .breadcrumb-nav-list-item,
+  html[data-theme="dark"] .main-content h1,
+  html[data-theme="dark"] .main-content h2,
+  html[data-theme="dark"] .main-content h3,
+  html[data-theme="dark"] .main-content h4,
+  html[data-theme="dark"] .main-content h5,
+  html[data-theme="dark"] .main-content h6 {
+    color: #f8fafc;
+  }
+
+  html[data-theme="dark"] a,
+  html[data-theme="dark"] .main-content a,
+  html[data-theme="dark"] .nav-list .nav-list-item .nav-list-link:hover,
+  html[data-theme="dark"] .nav-list .nav-list-item.active > .nav-list-link {
+    color: #93c5fd;
+  }
+
+  html[data-theme="dark"] .search-input {
+    border-color: #334155;
+  }
+
+  html[data-theme="dark"] .search-input::placeholder {
+    color: #94a3b8;
+  }
+
+  html[data-theme="dark"] code,
+  html[data-theme="dark"] .highlighter-rouge,
+  html[data-theme="dark"] .highlight,
+  html[data-theme="dark"] pre.highlight,
+  html[data-theme="dark"] div.highlight {
+    background: #020617;
+    color: #e5e7eb;
+    border-color: #334155;
+  }
+
+  html[data-theme="dark"] table,
+  html[data-theme="dark"] th,
+  html[data-theme="dark"] td {
+    background: #111827;
+    border-color: #334155;
+    color: #e5e7eb;
+  }
+
+  html[data-theme="dark"] th {
+    background: #1e293b;
+  }
+
+  html[data-theme="dark"] blockquote,
+  html[data-theme="dark"] .warning,
+  html[data-theme="dark"] .note,
+  html[data-theme="dark"] .tip {
+    background: #1e293b;
+    color: #e5e7eb;
+    border-color: #475569;
+  }
+
+  html[data-theme="dark"] .theme-toggle {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: #475569;
+  }
+
+  @media (max-width: 50rem) {
+    .theme-toggle {
+      top: auto;
+      right: 0.75rem;
+      bottom: 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var storageKey = "aqara-docs-theme";
+    var currentTheme = localStorage.getItem(storageKey) || "light";
+
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+    }
+
+    function getNextTheme(theme) {
+      return theme === "dark" ? "light" : "dark";
+    }
+
+    function getThemeLabel(theme) {
+      return theme === "dark" ? "Light" : "Dark";
+    }
+
+    function updateButton(button, theme) {
+      button.setAttribute("aria-label", "Switch to " + getThemeLabel(theme) + " theme");
+      button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+      button.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
+    }
+
+    applyTheme(currentTheme);
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "theme-toggle";
+      updateButton(button, currentTheme);
+
+      button.addEventListener("click", function () {
+        currentTheme = getNextTheme(currentTheme);
+        localStorage.setItem(storageKey, currentTheme);
+        applyTheme(currentTheme);
+        updateButton(button, currentTheme);
+      });
+
+      document.body.appendChild(button);
+    });
+  })();
+</script>
