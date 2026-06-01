@@ -18,15 +18,15 @@ map:
   - homeassistant_config:rw
 options:
   app_id: ""
-  key_id: ""
   app_key: ""
+  key_id: ""
   bridge_token: ""
   mq_namesrv_addr: "3rd-subscription.aqara.cn:9876"
   bridge_public_url: ""
 schema:
   app_id: str
-  key_id: str
   app_key: password
+  key_id: password
   bridge_token: password
   mq_namesrv_addr: str
   bridge_public_url: str

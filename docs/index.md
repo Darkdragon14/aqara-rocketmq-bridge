@@ -243,8 +243,8 @@ Fill the add-on options with the same Aqara project values:
 | Add-on option | Value |
 | --- | --- |
 | `app_id` | Aqara `APP_ID` |
-| `key_id` | Aqara `KEY_ID` |
 | `app_key` | Aqara `APP_KEY` |
+| `key_id` | Aqara `KEY_ID` |
 | `bridge_token` | Your chosen SSE bearer token |
 | `mq_namesrv_addr` | Copy `MQ message subscription address` from the same Aqara `Message push` page |
 | `bridge_public_url` | The stable URL you want to use for the bridge |
