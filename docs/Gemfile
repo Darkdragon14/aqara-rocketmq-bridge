@@ -2,6 +2,12 @@ source "https://rubygems.org"
 
 gem "github-pages", group: :jekyll_plugins
 
+# Ruby 3.3 no longer ships every dependency expected by the older
+# Jekyll/Kramdown stack bundled with github-pages, so keep these explicit.
+gem "rexml"
+gem "base64"
+gem "bigdecimal"
+
 group :jekyll_plugins do
   gem "jekyll-remote-theme"
   gem "jekyll-seo-tag"
