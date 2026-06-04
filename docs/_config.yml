@@ -2,8 +2,8 @@ title: Aqara RocketMQ Bridge
 description: One-page setup guide for the Aqara RocketMQ bridge and the Aqara Devices Home Assistant integration.
 favicon_ico: "/assets/images/favicon.ico"
 remote_theme: just-the-docs/just-the-docs
-url: https://darkdragon14.github.io
-baseurl: /aqara-rocketmq-bridge
+url: "https://ha-aqara-devices.darkdragon14.dev"
+baseurl: ""
 search_enabled: true
 heading_anchors: true
 enable_copy_code_button: true
@@ -14,9 +14,7 @@ nav_enabled: true
 toc:
   enabled: true
 
-aux_links:
-  Aqara Rocket MQ Bridge: https://github.com/Darkdragon14/aqara-rocketmq-bridge
-  Aqara Devices Integration: https://github.com/Darkdragon14/ha-aqara-devices
+aux_links: {}
 
 aux_links_new_tab: true
 
