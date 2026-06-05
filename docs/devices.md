@@ -11,8 +11,11 @@ has_toc: false
 
 This page lists the Aqara devices currently supported by the `ha_aqara_devices` integration, the Aqara model identifiers matched by discovery, and the Home Assistant entities exposed for each device family.
 
-## Hub G3
-{: #hub-g3 }
+## Cameras
+{: #cameras }
+
+### Camera Hub G3
+{: #camera-hub-g3 }
 
 Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 
@@ -42,7 +45,7 @@ Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 | Gesture OK both hands | `binary_sensor` |
 | Volume | `number` |
 
-## Camera Hub G2H Pro
+### Camera Hub G2H Pro
 {: #camera-hub-g2h-pro }
 
 Models: `lumi.camera.agl001`, `lumi.camera.acn003`
@@ -67,7 +70,10 @@ Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 | Camera Volume | `number` |
 | Alarm Volume | `number` |
 
-## Doorbell G410
+## Doorbells
+{: #doorbells }
+
+### Doorbell G410
 {: #doorbell-g410 }
 
 Models: `lumi.camera.acn017`, `lumi.camera.agl006`
@@ -98,7 +104,7 @@ Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 | Screen Flip | `select` |
 | Camera Mode | `select` |
 
-## Doorbell G4
+### Doorbell G4
 {: #doorbell-g4 }
 
 Models: `aqara.lock.agl002`, `lumi.camera.acn005`
@@ -122,7 +128,10 @@ Models: `aqara.lock.agl002`, `lumi.camera.acn005`
 | Stranger Face Event | `sensor` |
 | Screen Flip | `select` |
 
-## Hub M3
+## Hubs
+{: #hubs }
+
+### Hub M3
 {: #hub-m3 }
 
 Models: `lumi.gateway.acn012`, `lumi.gateway.agl004`
@@ -142,7 +151,7 @@ Models: `lumi.gateway.acn012`, `lumi.gateway.agl004`
 | Alarm Ringtone | `select` |
 | Doorbell Ringtone | `select` |
 
-## Hub M100
+### Hub M100
 {: #hub-m100 }
 
 Models: `lumi.gateway.agl008`, `lumi.gateway.agl010`
@@ -163,7 +172,10 @@ Models: `lumi.gateway.agl008`, `lumi.gateway.agl010`
 | Alarm Ringtone | `select` |
 | Doorbell Ringtone | `select` |
 
-## Presence Sensor FP2
+## Presence Sensors
+{: #presence-sensors }
+
+### Presence Sensor FP2
 {: #presence-sensor-fp2 }
 
 Models: `lumi.motion.agl001`
@@ -196,7 +208,7 @@ Models: `lumi.motion.agl001`
 | AI Person Detection | `sensor` |  |
 | Anti-light Pollution Mode | `sensor` |  |
 
-## Presence Multi-Sensor FP300
+### Presence Multi-Sensor FP300
 {: #presence-multi-sensor-fp300 }
 
 Models: `lumi.sensor_occupy.agl8`
@@ -212,7 +224,10 @@ Models: `lumi.sensor_occupy.agl8`
 | Battery | `sensor` |
 | Work Mode | `select` |
 
-## Door Lock A100 Pro
+## Locks
+{: #locks }
+
+### Door Lock A100 Pro
 {: #door-lock-a100-pro }
 
 Models: `aqara.lock.acn001`
