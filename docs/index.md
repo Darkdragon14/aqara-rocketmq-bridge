@@ -31,6 +31,7 @@ Useful links:
 
 - Aqara developer console: <https://developer.aqara.com/>
 - Aqara Message Push docs: <https://opendoc.aqara.com/en/docs/developmanual/messagePush/messagePushMode.html>
+- [Supported devices reference](/devices/)
 - Bridge repository: <https://github.com/Darkdragon14/aqara-rocketmq-bridge>
 - Home Assistant integration repository: <https://github.com/Darkdragon14/ha-aqara-devices>
 
