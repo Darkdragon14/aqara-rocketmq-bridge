@@ -4,7 +4,7 @@ title: Supported Devices
 nav_order: 3
 description: Supported Aqara device families, model identifiers, and exposed Home Assistant entities.
 permalink: /devices/
-has_toc: true
+has_toc: false
 ---
 
 # Supported devices
@@ -12,6 +12,7 @@ has_toc: true
 This page lists the Aqara devices currently supported by the `ha_aqara_devices` integration, the Aqara model identifiers matched by discovery, and the Home Assistant entities exposed for each device family.
 
 ## Hub G3
+{: #hub-g3 }
 
 Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 
@@ -42,6 +43,7 @@ Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 | Volume | `number` |
 
 ## Camera Hub G2H Pro
+{: #camera-hub-g2h-pro }
 
 Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 
@@ -66,6 +68,7 @@ Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 | Alarm Volume | `number` |
 
 ## Doorbell G410
+{: #doorbell-g410 }
 
 Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 
@@ -96,6 +99,7 @@ Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 | Camera Mode | `select` |
 
 ## Doorbell G4
+{: #doorbell-g4 }
 
 Models: `aqara.lock.agl002`, `lumi.camera.acn005`
 
@@ -119,6 +123,7 @@ Models: `aqara.lock.agl002`, `lumi.camera.acn005`
 | Screen Flip | `select` |
 
 ## Hub M3
+{: #hub-m3 }
 
 Models: `lumi.gateway.acn012`, `lumi.gateway.agl004`
 
@@ -138,6 +143,7 @@ Models: `lumi.gateway.acn012`, `lumi.gateway.agl004`
 | Doorbell Ringtone | `select` |
 
 ## Hub M100
+{: #hub-m100 }
 
 Models: `lumi.gateway.agl008`, `lumi.gateway.agl010`
 
@@ -158,6 +164,7 @@ Models: `lumi.gateway.agl008`, `lumi.gateway.agl010`
 | Doorbell Ringtone | `select` |
 
 ## Presence Sensor FP2
+{: #presence-sensor-fp2 }
 
 Models: `lumi.motion.agl001`
 
@@ -190,6 +197,7 @@ Models: `lumi.motion.agl001`
 | Anti-light Pollution Mode | `sensor` |  |
 
 ## Presence Multi-Sensor FP300
+{: #presence-multi-sensor-fp300 }
 
 Models: `lumi.sensor_occupy.agl8`
 
@@ -205,6 +213,7 @@ Models: `lumi.sensor_occupy.agl8`
 | Work Mode | `select` |
 
 ## Door Lock A100 Pro
+{: #door-lock-a100-pro }
 
 Models: `aqara.lock.acn001`
 
