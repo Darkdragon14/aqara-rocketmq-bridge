@@ -3,7 +3,7 @@ layout: default
 title: Supported Devices
 nav_order: 3
 description: Supported Aqara device families, model identifiers, and exposed Home Assistant entities.
-permalink: /DEVICES/
+permalink: /devices/
 has_toc: true
 ---
 
