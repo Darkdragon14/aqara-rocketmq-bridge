@@ -172,6 +172,21 @@ Models: `lumi.gateway.agl008`, `lumi.gateway.agl010`
 | Alarm Ringtone | `select` |
 | Doorbell Ringtone | `select` |
 
+### Hub M200
+{: #hub-m200 }
+
+Models: `lumi.gateway.agl011`
+
+| Entity | Type |
+| --- | --- |
+| AC On/Off Status | `binary_sensor` |
+| Alert Volume | `number` |
+| System Volume | `number` |
+| Alert Duration | `number` |
+| Gateway Language | `select` |
+| Alert Ringtone | `select` |
+| AC Mode | `select` |
+
 ## Presence Sensors
 {: #presence-sensors }
 
@@ -242,3 +257,30 @@ Models: `aqara.lock.acn001`
 | NFC User ID | `sensor` |
 | HomeKit Bluetooth User ID | `sensor` |
 | Temporary Password User ID | `sensor` |
+
+### Smart Lock U200
+{: #smart-lock-u200 }
+
+Models: `aqara.matter.4447_10242`
+
+| Entity | Type |
+| --- | --- |
+| Lock | `lock` |
+| Reachable | `binary_sensor` |
+| Battery Replacement Needed | `binary_sensor` |
+| Battery | `sensor` |
+| Battery Voltage | `sensor` |
+
+### Smart Video Door Lock Xingyao
+{: #smart-video-door-lock-xingyao }
+
+Models: `aqara.lock.acn002`
+
+| Entity | Type |
+| --- | --- |
+| Door Event | `sensor` |
+| Door Lock Status | `sensor` |
+| Open Door Method | `sensor` |
+| Lock Exception Alert | `sensor` |
+| Device Online Status | `sensor` |
+| Zigbee Signal Strength | `sensor` |
