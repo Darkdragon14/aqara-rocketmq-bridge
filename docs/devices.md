@@ -107,7 +107,7 @@ Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 ### Doorbell G4
 {: #doorbell-g4 }
 
-Models: `aqara.lock.agl002`, `lumi.camera.acn005`
+Models: `lumi.camera.acn005`, `lumi.camera.agl002`
 
 | Entity | Type |
 | --- | --- |
@@ -242,10 +242,10 @@ Models: `lumi.sensor_occupy.agl8`
 ## Locks
 {: #locks }
 
-### Door Lock A100 Pro
+### Door Lock A100 / A100 Pro
 {: #door-lock-a100-pro }
 
-Models: `aqara.lock.acn001`
+Models: `aqara.lock.acn001`, `aqara.lock.agl002`
 
 | Entity | Type |
 | --- | --- |

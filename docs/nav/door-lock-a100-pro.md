@@ -1,5 +1,5 @@
 ---
-title: Door Lock A100 Pro
+title: Door Lock A100 / A100 Pro
 parent: Locks
 grand_parent: Supported Devices
 nav_order: 1
