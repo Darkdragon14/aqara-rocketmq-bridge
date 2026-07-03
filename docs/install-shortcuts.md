@@ -42,4 +42,4 @@ https://github.com/Darkdragon14/aqara-rocketmq-bridge
 
 For the complete setup, including Aqara developer credentials, RocketMQ configuration, Docker, Home Assistant OS add-on setup, and troubleshooting, follow the full guide:
 
-- [Aqara RocketMQ Bridge setup guide](./)
+- [Aqara RocketMQ Bridge setup guide]({{ "/" | relative_url }})
