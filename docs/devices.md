@@ -198,6 +198,7 @@ Models: `lumi.motion.agl001`
 | Entity | Type | Notes |
 | --- | --- | --- |
 | Presence | `binary_sensor` |  |
+| Set to No Presence | `button` | resets the FP2 state to no presence |
 | Connectivity | `binary_sensor` |  |
 | Detection Area 1-30 | `binary_sensor` | created disabled by default |
 | People Counting | `sensor` |  |
