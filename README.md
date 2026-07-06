@@ -27,6 +27,10 @@ Aqara RocketMQ -> aqara-rocketmq-bridge -> SSE -> Home Assistant integration
 
 The Home Assistant integration remains responsible for Aqara Open API authentication and `config.resource.subscribe` calls.
 
+Device discovery also stays in the Home Assistant integration. Hub child devices are discovered through Aqara Open API and registered under their parent hub in Home Assistant; generic child entities are read-only, with only clearly safe resources enabled by default. The bridge only relays RocketMQ resource updates for resources the integration subscribes to.
+
+Pairing mode is also controlled by the Home Assistant integration through Aqara Open API services: `ha_aqara_devices.open_pairing_mode` and `ha_aqara_devices.close_pairing_mode`.
+
 ## Aqara developer setup
 
 You need an Aqara developer project before running the bridge.

@@ -187,6 +187,25 @@ Models: `lumi.gateway.agl011`
 | Alert Ringtone | `select` |
 | AC Mode | `select` |
 
+### Hub child devices
+{: #hub-child-devices }
+
+The `ha_aqara_devices` integration can discover child devices attached to supported Aqara hubs and register them in the Home Assistant device registry under their parent hub.
+
+Discovery uses Aqara Open API data from `query.device.subInfo` and `query.device.info` entries that expose `parentDid`.
+
+Initial behavior:
+
+- child devices are attached to their hub with `via_device`;
+- firmware version is shown when Aqara exposes `firmwareVersion`;
+- generic child-device entities are created in the pre-release as read-only entities;
+- clearly safe read-only resources may be enabled by default;
+- writable, internal, or ambiguous generic resources remain disabled by default;
+- enabled generic child-device entities can receive subscribed SSE updates from the bridge;
+- pairing, unbind, and child-device controls are not exposed by default.
+
+This keeps unknown child models visible in Home Assistant without creating active broken or incorrectly typed entities.
+
 ## Presence Sensors
 {: #presence-sensors }
 

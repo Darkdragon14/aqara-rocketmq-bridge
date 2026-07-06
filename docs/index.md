@@ -330,7 +330,23 @@ Once the integration starts successfully, it will:
 1. validate the bridge with `GET /health`;
 2. connect to `GET /events` with `Authorization: Bearer <bridge token>`;
 3. call Aqara Open API subscription endpoints in `User-defined subscription mode`;
-4. create entities for supported Aqara devices.
+4. create entities for supported Aqara devices;
+5. discover supported hub child devices and attach them under their parent hub in the Home Assistant device registry.
+
+Child-device discovery is handled by the Home Assistant integration through Aqara Open API. The bridge only transports subscribed RocketMQ resource updates over SSE.
+
+In the pre-release, the integration creates read-only generic child entities. Clearly safe read-only resources may be enabled by default; writable, internal, or ambiguous resources stay disabled. When you enable an additional child entity, the integration reloads, subscribes to the corresponding child resource, and the bridge can stream its SSE updates.
+
+### 5. Optional child-device pairing services
+
+The integration exposes two Home Assistant services for supported hubs:
+
+| Service | Purpose | Required fields |
+| --- | --- | --- |
+| `ha_aqara_devices.open_pairing_mode` | Open Aqara child-device pairing mode on a hub | `did`, optional `duration` in seconds |
+| `ha_aqara_devices.close_pairing_mode` | Close Aqara child-device pairing mode on a hub | `did` |
+
+Use the Aqara hub DID shown in Home Assistant device diagnostics/logs or in the Aqara Open API payloads. These services do not remove or unbind devices.
 
 ## Step 6 - Verify the bridge and the event stream
 
