@@ -332,6 +332,15 @@ Once the integration starts successfully, it will:
 3. call Aqara Open API subscription endpoints in `User-defined subscription mode`;
 4. create entities for supported Aqara devices.
 
+### 5. Optional experimental camera streams
+
+{: .warning }
+> Camera entities are currently available only in the experimental `v1.4.0-beta-camera-go2rtc-streams` prerelease. They are not part of the stable integration yet.
+
+The prerelease can pair supported G3, G2H Pro, G410, and G4 devices with a separate go2rtc instance and expose their video in Home Assistant. The feature is optional and does not change the bridge or existing Aqara entities.
+
+Follow the complete [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}) to install go2rtc, pair a camera, use an existing stream, and review the current limitations.
+
 ## Step 6 - Verify the bridge and the event stream
 
 ### Health endpoint

@@ -44,6 +44,9 @@ Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 | Gesture Finger Gun both hands | `binary_sensor` |
 | Gesture OK both hands | `binary_sensor` |
 | Volume | `number` |
+| Live stream | `camera` |
+
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
 
 ### Camera Hub G2H Pro
 {: #camera-hub-g2h-pro }
@@ -69,6 +72,9 @@ Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 | Music Volume | `number` |
 | Camera Volume | `number` |
 | Alarm Volume | `number` |
+| Live stream | `camera` |
+
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
 
 ## Doorbells
 {: #doorbells }
@@ -103,6 +109,9 @@ Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 | Alarm Ringtone | `select` |
 | Screen Flip | `select` |
 | Camera Mode | `select` |
+| Live stream | `camera` |
+
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
 
 ### Doorbell G4
 {: #doorbell-g4 }
@@ -127,6 +136,9 @@ Models: `lumi.camera.acn005`, `lumi.camera.agl002`
 | Face Recognition Event | `sensor` |
 | Stranger Face Event | `sensor` |
 | Screen Flip | `select` |
+| Live stream | `camera` |
+
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
 
 ## Hubs
 {: #hubs }
