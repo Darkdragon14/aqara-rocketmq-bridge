@@ -2,7 +2,7 @@
 title: Cameras
 parent: Supported Devices
 nav_order: 1
-permalink: /devices/#cameras
+permalink: /camera-streaming/
 nav_exclude: false
 ---
 

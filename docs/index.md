@@ -339,7 +339,7 @@ Once the integration starts successfully, it will:
 
 The prerelease can pair supported G3, G2H Pro, G410, and G4 devices with a separate go2rtc instance and expose their video in Home Assistant. The feature is optional and does not change the bridge or existing Aqara entities.
 
-Follow the complete [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}) to install go2rtc, pair a camera, use an existing stream, and review the current limitations.
+Follow the complete [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}) to install go2rtc, pair a camera, use an existing stream, and review the current limitations.
 
 ## Step 6 - Verify the bridge and the event stream
 

@@ -46,7 +46,7 @@ Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 | Volume | `number` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ### Camera Hub G2H Pro
 {: #camera-hub-g2h-pro }
@@ -74,7 +74,7 @@ Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 | Alarm Volume | `number` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ## Doorbells
 {: #doorbells }
@@ -111,7 +111,7 @@ Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 | Camera Mode | `select` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ### Doorbell G4
 {: #doorbell-g4 }
@@ -138,7 +138,7 @@ Models: `lumi.camera.acn005`, `lumi.camera.agl002`
 | Screen Flip | `select` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/devices/#cameras' | relative_url }}).
+The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ## Hubs
 {: #hubs }

@@ -23,4 +23,4 @@ Camera streams are optional. Without go2rtc, the integration still loads all nor
 {: .warning }
 > The go2rtc camera flow is available only in the experimental `v1.4.0-beta-camera-go2rtc-streams` prerelease. Stable versions do not currently include camera entities.
 
-See [Cameras]({{ '/devices/#cameras' | relative_url }}) for go2rtc installation, HomeKit pairing, existing-stream setup, removal, security guidance, and current limitations.
+See [Cameras]({{ '/camera-streaming/' | relative_url }}) for go2rtc installation, HomeKit pairing, existing-stream setup, removal, security guidance, and current limitations.
