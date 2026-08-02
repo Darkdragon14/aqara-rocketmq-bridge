@@ -10,10 +10,7 @@ nav_exclude: false
 
 The `ha_aqara_devices` integration discovers supported Aqara camera-family devices through Aqara Open API v3 and uses the bridge only for Aqara message push events.
 
-## Experimental live streams with go2rtc
-
-{: .warning }
-> Camera streaming is currently experimental and available only in the `v1.4.0-beta-camera-go2rtc-streams` prerelease of `ha_aqara_devices`. It is not included in the current stable release. Install the prerelease only if you are comfortable testing it and reporting camera-specific issues.
+## Optional live streams with go2rtc
 
 G3, G2H Pro, G410, and G4 devices can expose a Home Assistant `camera` entity through a separate [go2rtc](https://github.com/AlexxIT/go2rtc) instance. This is optional: all Aqara controls, sensors, events, and bridge-backed updates continue to work without go2rtc.
 
@@ -23,9 +20,9 @@ The bridge does not transport camera media:
 
 `aqara-rocketmq-bridge` remains responsible only for RocketMQ/SSE events. The integration uses the go2rtc API to discover and pair the camera, while Home Assistant reads the video from go2rtc's RTSP output.
 
-## 1. Install the camera prerelease
+## 1. Install the integration
 
-Open the `Aqara Devices` repository in HACS, enable prerelease versions if necessary, select **Redownload**, and choose `v1.4.0-beta-camera-go2rtc-streams`. Restart Home Assistant after installation.
+Install or update `Aqara Devices` to `v1.4.0` or later through HACS, then restart Home Assistant.
 
 ## 2. Install go2rtc
 

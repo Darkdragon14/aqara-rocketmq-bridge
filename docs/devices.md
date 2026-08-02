@@ -46,7 +46,7 @@ Models: `lumi.camera.gwpgl1`, `lumi.camera.gwpagl01`
 | Volume | `number` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
+The optional `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ### Camera Hub G2H Pro
 {: #camera-hub-g2h-pro }
@@ -74,7 +74,7 @@ Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 | Alarm Volume | `number` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
+The optional `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ## Doorbells
 {: #doorbells }
@@ -111,7 +111,7 @@ Models: `lumi.camera.acn017`, `lumi.camera.agl006`
 | Camera Mode | `select` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
+The optional `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ### Doorbell G4
 {: #doorbell-g4 }
@@ -138,7 +138,7 @@ Models: `lumi.camera.acn005`, `lumi.camera.agl002`
 | Screen Flip | `select` |
 | Live stream | `camera` |
 
-The experimental `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
+The optional `camera` entity is created only when the device is associated with a compatible go2rtc stream. See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}).
 
 ## Hubs
 {: #hubs }
@@ -198,6 +198,20 @@ Models: `lumi.gateway.agl011`
 | Gateway Language | `select` |
 | Alert Ringtone | `select` |
 | AC Mode | `select` |
+
+### Hub child devices
+{: #hub-child-devices }
+
+Version `v1.4.0` and later discovers child devices connected to supported G3, G2H Pro, M3, M100, and M200 hubs. Every child is registered as its own Home Assistant device below the parent hub.
+
+Readable Aqara resources are exposed as generic read-only `sensor` or `binary_sensor` entities. Reportable binary states, common measurements with units, and a small set of recognized safe resources are enabled automatically. Writable, unknown, or less useful resources are disabled by default; enable only the entities you need from the child device's entity list. The integration reloads after an entity is enabled or disabled so polling and push subscriptions remain aligned.
+
+Use these Home Assistant services with the parent hub's Aqara DID:
+
+| Service | Purpose |
+| --- | --- |
+| `ha_aqara_devices.open_pairing_mode` | Allow the hub to accept a new child device |
+| `ha_aqara_devices.close_pairing_mode` | Stop child-device pairing mode |
 
 ## Presence Sensors
 {: #presence-sensors }

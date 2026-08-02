@@ -10,7 +10,7 @@ nav_exclude: false
 
 After the integration is installed, add `Aqara Devices` from Home Assistant and enter the Aqara Open API account, region, developer credentials, bridge URL, and bridge token.
 
-The options flow has three sections in the camera prerelease:
+The options flow has three sections in `v1.4.0` and later:
 
 | Menu | Purpose |
 | --- | --- |
@@ -20,7 +20,8 @@ The options flow has three sections in the camera prerelease:
 
 Camera streams are optional. Without go2rtc, the integration still loads all normal Open API and bridge-backed entities.
 
-{: .warning }
-> The go2rtc camera flow is available only in the experimental `v1.4.0-beta-camera-go2rtc-streams` prerelease. Stable versions do not currently include camera entities.
+Supported hubs also expose Aqara child devices. The integration creates generic read-only entities from the resources reported by Aqara. Safe reportable states and common measurements are enabled automatically; writable, unknown, or less useful resources remain disabled until you enable them from the child device's entity list. Changing this setting reloads the integration so polling and subscriptions match the enabled entities.
+
+Use `ha_aqara_devices.open_pairing_mode` or `ha_aqara_devices.close_pairing_mode` with the parent hub DID to control child-device pairing mode.
 
 See [Cameras]({{ '/camera-streaming/' | relative_url }}) for go2rtc installation, HomeKit pairing, existing-stream setup, removal, security guidance, and current limitations.

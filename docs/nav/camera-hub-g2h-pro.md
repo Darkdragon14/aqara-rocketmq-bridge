@@ -11,6 +11,6 @@ nav_exclude: false
 
 Models: `lumi.camera.agl001`, `lumi.camera.acn003`
 
-The integration exposes G2H Pro controls and sensors through Aqara Open API v3. The experimental camera prerelease can also create a Home Assistant `camera` entity by pairing the G2H Pro with a separate go2rtc instance.
+The integration exposes G2H Pro controls and sensors through Aqara Open API v3. Version `v1.4.0` and later can also create a Home Assistant `camera` entity by pairing the G2H Pro with a separate go2rtc instance and discover child devices connected to the hub.
 
-See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}) for the prerelease disclaimer and configuration steps.
+See [Camera streaming setup]({{ '/camera-streaming/' | relative_url }}) for configuration steps and [Hub child devices]({{ '/devices/#hub-child-devices' | relative_url }}) for child entity behavior.
