@@ -21,7 +21,7 @@ public class HealthController {
     public HealthResponse health() {
         boolean started = bridgeProperties.isRocketmqEnabled() && rocketMqHealth.isStarted();
         String status = bridgeProperties.isRocketmqEnabled()
-                ? (started ? "up" : "starting")
+                ? (started ? "up" : rocketMqHealth.isFailed() ? "error" : "starting")
                 : "degraded";
 
         return new HealthResponse(

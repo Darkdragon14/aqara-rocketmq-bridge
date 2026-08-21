@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RocketMqHealth {
 
     private final AtomicBoolean started = new AtomicBoolean(false);
+    private final AtomicBoolean failed = new AtomicBoolean(false);
     private final AtomicReference<Instant> lastMessageAt = new AtomicReference<>();
     private final AtomicReference<String> lastError = new AtomicReference<>();
 
@@ -19,11 +20,28 @@ public class RocketMqHealth {
 
     public void markStarted() {
         started.set(true);
+        failed.set(false);
         lastError.set(null);
     }
 
     public void markStopped() {
         started.set(false);
+    }
+
+    public boolean isFailed() {
+        return failed.get();
+    }
+
+    public void markRetrying(String message) {
+        started.set(false);
+        failed.set(false);
+        lastError.set(message);
+    }
+
+    public void markFailed(String message) {
+        started.set(false);
+        failed.set(true);
+        lastError.set(message);
     }
 
     public void markMessageReceived() {
@@ -40,6 +58,10 @@ public class RocketMqHealth {
     }
 
     public void markError(Exception exception) {
-        lastError.set(exception.getMessage());
+        markError(exception.getMessage());
+    }
+
+    public void markError(String message) {
+        lastError.set(message);
     }
 }
