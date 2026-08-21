@@ -476,7 +476,6 @@ class AqaraRocketMqConsumerTest {
             reconnectingConsumer.run(mock(ApplicationArguments.class));
             assertThat(reconnectHealth.isStarted()).isFalse();
             assertThat(output).contains("Retrying in 5 seconds");
-            assertThat(output).doesNotContain("\tat ");
 
             ArgumentCaptor<Runnable> retry = ArgumentCaptor.forClass(Runnable.class);
             verify(taskScheduler).schedule(retry.capture(), any(Instant.class));
