@@ -27,3 +27,6 @@ logging:
   level:
     root: ${LOG_LEVEL:INFO}
     darkdragon.aqara.bridge: ${APP_LOG_LEVEL:INFO}
+    RocketmqClient: ${ROCKETMQ_LOG_LEVEL:WARN}
+    RocketmqCommon: ${ROCKETMQ_LOG_LEVEL:WARN}
+    RocketmqRemoting: ${ROCKETMQ_LOG_LEVEL:WARN}

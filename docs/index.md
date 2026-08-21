@@ -372,6 +372,7 @@ Interpretation:
 
 - `up`: the RocketMQ consumer is started;
 - `starting`: the bridge is up, but RocketMQ is not ready yet;
+- `error`: RocketMQ could not start because of a non-retryable configuration or authentication error;
 - `degraded`: RocketMQ was disabled by configuration.
 
 ### SSE endpoint
