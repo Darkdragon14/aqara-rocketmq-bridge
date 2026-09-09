@@ -10,6 +10,11 @@ permissions:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        addon:
+          - aqara-rocketmq-bridge
+          - aqara-rocketmq-bridge-beta
 
     steps:
       - name: Checkout
@@ -18,7 +23,7 @@ jobs:
       - name: Run Home Assistant add-on linter
         uses: frenck/action-addon-linter@v2
         with:
-          path: ./addon/aqara-rocketmq-bridge
+          path: ./addon/${{ matrix.addon }}
 
   build:
     runs-on: ubuntu-latest

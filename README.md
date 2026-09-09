@@ -89,6 +89,8 @@ Replace `ghcr.io/darkdragon14/aqara-rocketmq-bridge:main` with a version tag if 
 
 The add-on uses a prebuilt GHCR image instead of relying on a local build during installation.
 
+The repository also exposes an experimental `Aqara RocketMQ Bridge Beta` add-on for opt-in testing. Do not run the stable and beta add-ons at the same time because both use port `8080` by default. Bridge beta `1.2.0-beta.1` must be paired with the `ha-aqara-devices` U200 push beta.
+
 - add-on image reference: `ghcr.io/darkdragon14/aqara-rocketmq-bridge-addon-{arch}`
 - supported add-on architectures: `amd64`, `aarch64`
 - the Supervisor resolves `{arch}` and pulls the matching image for the host
