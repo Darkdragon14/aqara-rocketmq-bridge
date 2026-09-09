@@ -25,7 +25,7 @@ Add this bridge as a Home Assistant OS add-on repository:
 Aqara RocketMQ -> aqara-rocketmq-bridge -> SSE -> Home Assistant integration
 ```
 
-The Home Assistant integration remains responsible for Aqara Open API authentication and `config.resource.subscribe` calls.
+The Home Assistant integration remains responsible for Aqara Open API authentication and resource or trait subscription calls.
 
 ## Aqara developer setup
 
@@ -47,7 +47,7 @@ You need an Aqara developer project before running the bridge.
 
 ## Endpoints
 
-- `GET /health` returns bridge and RocketMQ status.
+- `GET /health` returns bridge and RocketMQ status plus supported message capabilities.
 - `GET /events` streams batched latest-state updates over SSE.
 
 `GET /events` requires `Authorization: Bearer <BRIDGE_TOKEN>`.

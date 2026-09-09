@@ -1,6 +1,7 @@
 package darkdragon.aqara.bridge.model;
 
 import java.time.Instant;
+import java.util.List;
 
 public record HealthResponse(
         String status,
@@ -9,6 +10,8 @@ public record HealthResponse(
         Instant lastMessageAt,
         String publicUrl,
         String nameserver,
-        String lastError
+        String lastError,
+        List<String> capabilities,
+        long heartbeatIntervalSeconds
 ) {
 }

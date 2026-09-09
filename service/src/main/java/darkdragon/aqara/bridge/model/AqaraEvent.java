@@ -4,7 +4,7 @@ public record AqaraEvent(
         String type,
         String subjectId,
         String resourceId,
-        String value,
+        Object value,
         long time,
         int statusCode,
         TriggerSource triggerSource,

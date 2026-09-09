@@ -6,6 +6,8 @@ import darkdragon.aqara.bridge.mq.RocketMqHealth;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class HealthController {
 
@@ -31,7 +33,9 @@ public class HealthController {
                 rocketMqHealth.getLastMessageAt(),
                 bridgeProperties.getBridgePublicUrl(),
                 bridgeProperties.getMqNamesrvAddr(),
-                rocketMqHealth.getLastError()
+                rocketMqHealth.getLastError(),
+                List.of("resource_report", "spec_report"),
+                bridgeProperties.getHeartbeatIntervalSeconds()
         );
     }
 }
