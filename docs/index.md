@@ -364,7 +364,9 @@ Typical fields:
   "lastMessageAt": "2026-04-10T10:00:00Z",
   "publicUrl": "https://bridge.example.com",
   "nameserver": "your-message-push-nameserver",
-  "lastError": null
+  "lastError": null,
+  "capabilities": ["resource_report", "spec_report"],
+  "heartbeatIntervalSeconds": 15
 }
 ```
 
@@ -374,6 +376,8 @@ Interpretation:
 - `starting`: the bridge is up, but RocketMQ is not ready yet;
 - `error`: RocketMQ could not start because of a non-retryable configuration or authentication error;
 - `degraded`: RocketMQ was disabled by configuration.
+- `capabilities`: message formats this bridge version can relay over SSE.
+- `heartbeatIntervalSeconds`: expected interval between SSE keepalive messages.
 
 ### SSE endpoint
 

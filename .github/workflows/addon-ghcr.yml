@@ -16,33 +16,32 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.tags.outputs.tags }}
-      version: ${{ steps.version.outputs.version }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Read add-on version
-        id: version
-        shell: bash
-        run: |
-          version=$(grep '^version:' addon/aqara-rocketmq-bridge/config.yaml | awk '{print $2}')
-          echo "version=${version}" >> "$GITHUB_OUTPUT"
-
       - name: Compute image tags
         id: tags
         shell: bash
         run: |
-          tags="${{ steps.version.outputs.version }}"
+          tags=("sha-${GITHUB_SHA::7}")
           if [[ "${GITHUB_REF_TYPE}" == "branch" ]]; then
-            tags="${tags} main"
+            tags+=("${GITHUB_REF_NAME}")
           fi
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
-            tags="${tags} ${GITHUB_REF_NAME} latest"
+            version="${GITHUB_REF_NAME#v}"
+            if ! grep -Rqx "version: ${version}" addon/*/config.yaml; then
+              echo "No add-on config matches release version ${version}" >&2
+              exit 1
+            fi
+            tags+=("${GITHUB_REF_NAME}" "${version}")
+            if [[ "${version}" != *-* ]]; then
+              tags+=("latest")
+            fi
           fi
-          tags="${tags} sha-${GITHUB_SHA::7}"
-          tags=$(printf '%s\n' ${tags} | awk 'NF' | sort -u | tr '\n' ' ')
-          echo "tags=${tags}" >> "$GITHUB_OUTPUT"
+          printf -v tag_output '%s ' "${tags[@]}"
+          echo "tags=${tag_output% }" >> "$GITHUB_OUTPUT"
 
   build:
     needs: prepare
@@ -79,12 +78,13 @@ jobs:
         shell: bash
         run: |
           image=$(printf '%s' "ghcr.io/${GITHUB_REPOSITORY_OWNER}/aqara-rocketmq-bridge-addon-${{ matrix.arch }}" | tr '[:upper:]' '[:lower:]')
+          # shellcheck disable=SC2086
           for tag in ${{ needs.prepare.outputs.tags }}; do
             docker buildx build \
               --platform ${{ matrix.platform }} \
               --file addon/aqara-rocketmq-bridge/Dockerfile \
               --build-arg BUILD_FROM=${{ matrix.build_from }} \
-              --tag ${image}:${tag} \
+              --tag "${image}:${tag}" \
               --push \
               .
           done

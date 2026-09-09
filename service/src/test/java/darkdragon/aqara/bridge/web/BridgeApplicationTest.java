@@ -2,6 +2,8 @@ package darkdragon.aqara.bridge.web;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import darkdragon.aqara.bridge.model.AqaraEvent;
+import darkdragon.aqara.bridge.model.AqaraEventBatch;
 import darkdragon.aqara.bridge.stream.EventBroadcaster;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +47,10 @@ class BridgeApplicationTest {
                 .expectBody()
                 .jsonPath("$.publicUrl").isEqualTo("https://aqara.darkdragon.fr")
                 .jsonPath("$.topic").doesNotExist()
-                .jsonPath("$.rocketmqEnabled").isEqualTo(false);
+                .jsonPath("$.rocketmqEnabled").isEqualTo(false)
+                .jsonPath("$.capabilities[0]").isEqualTo("resource_report")
+                .jsonPath("$.capabilities[1]").isEqualTo("spec_report")
+                .jsonPath("$.heartbeatIntervalSeconds").isEqualTo(15);
     }
 
     @Test
@@ -63,6 +69,38 @@ class BridgeApplicationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, "text/event-stream;charset=UTF-8");
+    }
+
+    @Test
+    void eventsPreserveTypedTraitValues() {
+        eventBroadcaster.publish(new AqaraEvent(
+                "spec_report",
+                "matt.u200",
+                "0.BasicInformation.Reachable",
+                false,
+                1710000000000L,
+                0,
+                null,
+                null,
+                "typed-value",
+                "open"
+        ));
+
+        AqaraEventBatch snapshot = webTestClient.get()
+                .uri("/events")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer test-token")
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(AqaraEventBatch.class)
+                .getResponseBody()
+                .blockFirst(Duration.ofSeconds(2));
+
+        assertThat(snapshot).isNotNull();
+        assertThat(snapshot.events())
+                .filteredOn(event -> "typed-value".equals(event.msgId()))
+                .singleElement()
+                .extracting(AqaraEvent::value)
+                .isEqualTo(false);
     }
 
     @Test

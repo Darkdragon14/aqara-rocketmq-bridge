@@ -25,7 +25,7 @@ Add this bridge as a Home Assistant OS add-on repository:
 Aqara RocketMQ -> aqara-rocketmq-bridge -> SSE -> Home Assistant integration
 ```
 
-The Home Assistant integration remains responsible for Aqara Open API authentication and `config.resource.subscribe` calls.
+The Home Assistant integration remains responsible for Aqara Open API authentication and resource or trait subscription calls.
 
 ## Aqara developer setup
 
@@ -47,7 +47,7 @@ You need an Aqara developer project before running the bridge.
 
 ## Endpoints
 
-- `GET /health` returns bridge and RocketMQ status.
+- `GET /health` returns bridge and RocketMQ status plus supported message capabilities.
 - `GET /events` streams batched latest-state updates over SSE.
 
 `GET /events` requires `Authorization: Bearer <BRIDGE_TOKEN>`.
@@ -88,6 +88,8 @@ Replace `ghcr.io/darkdragon14/aqara-rocketmq-bridge:main` with a version tag if 
 [![Open your Home Assistant instance and add this add-on repository.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FDarkdragon14%2Faqara-rocketmq-bridge)
 
 The add-on uses a prebuilt GHCR image instead of relying on a local build during installation.
+
+The repository also exposes an experimental `Aqara RocketMQ Bridge Beta` add-on for opt-in testing. Do not run the stable and beta add-ons at the same time because both use port `8080` by default. Bridge beta `1.2.0-beta.1` must be paired with the `ha-aqara-devices` U200 push beta.
 
 - add-on image reference: `ghcr.io/darkdragon14/aqara-rocketmq-bridge-addon-{arch}`
 - supported add-on architectures: `amd64`, `aarch64`

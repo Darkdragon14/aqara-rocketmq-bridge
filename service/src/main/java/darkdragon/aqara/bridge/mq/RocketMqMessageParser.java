@@ -21,7 +21,7 @@ public class RocketMqMessageParser {
     public List<AqaraEvent> parse(String payload) throws IOException {
         JsonNode root = objectMapper.readTree(payload);
         String msgType = text(root, "msgType");
-        if (!"resource_report".equals(msgType)) {
+        if (!"resource_report".equals(msgType) && !"spec_report".equals(msgType)) {
             return List.of();
         }
 
@@ -35,13 +35,27 @@ public class RocketMqMessageParser {
         }
 
         for (JsonNode item : data) {
+            Integer statusCode = parseStatusCode(item.path("statusCode"));
+            Long eventTime = parseLong(item.path("time"));
+            if (statusCode == null || eventTime == null) {
+                continue;
+            }
+            String subjectId;
+            String resourceId;
+            if ("spec_report".equals(msgType)) {
+                subjectId = text(item, "deviceId");
+                resourceId = traitCodePath(item);
+            } else {
+                subjectId = text(item, "subjectId");
+                resourceId = text(item, "resourceId");
+            }
             events.add(new AqaraEvent(
                     msgType,
-                    text(item, "subjectId"),
-                    text(item, "resourceId"),
-                    text(item, "value"),
-                    parseLong(item.path("time")),
-                    item.path("statusCode").asInt(),
+                    subjectId,
+                    resourceId,
+                    "spec_report".equals(msgType) ? value(item.path("value")) : text(item, "value"),
+                    eventTime,
+                    statusCode,
                     parseTriggerSource(item.path("triggerSource")),
                     text(item, "attach"),
                     msgId,
@@ -50,6 +64,23 @@ public class RocketMqMessageParser {
         }
 
         return events;
+    }
+
+    private String traitCodePath(JsonNode item) {
+        String endpointId = text(item, "endpointId");
+        String functionCode = text(item, "functionCode");
+        String traitCode = text(item, "traitCode");
+        if (endpointId == null || functionCode == null || traitCode == null) {
+            return null;
+        }
+        return String.join(".", endpointId, functionCode, traitCode);
+    }
+
+    private Object value(JsonNode node) {
+        if (node == null || node.isMissingNode() || node.isNull()) {
+            return null;
+        }
+        return objectMapper.convertValue(node, Object.class);
     }
 
     private AqaraEvent.TriggerSource parseTriggerSource(JsonNode node) {
@@ -63,18 +94,37 @@ public class RocketMqMessageParser {
         return new AqaraEvent.TriggerSource(type, time, id);
     }
 
-    private long parseLong(JsonNode node) {
+    private Integer parseStatusCode(JsonNode node) {
+        if (node == null || !node.isIntegralNumber() || !node.canConvertToInt()) {
+            return null;
+        }
+        return node.intValue();
+    }
+
+    private Long parseLong(JsonNode node) {
         if (node == null || node.isMissingNode() || node.isNull()) {
             return 0L;
         }
-        if (node.isNumber()) {
-            return node.asLong();
+        if (node.isIntegralNumber()) {
+            if (!node.canConvertToLong()) {
+                return null;
+            }
+            long value = node.longValue();
+            return value >= 0 ? value : null;
+        }
+        if (!node.isTextual()) {
+            return null;
         }
         String value = node.asText();
         if (value == null || value.isBlank()) {
-            return 0L;
+            return null;
         }
-        return Long.parseLong(value);
+        try {
+            long parsed = Long.parseLong(value);
+            return parsed >= 0 ? parsed : null;
+        } catch (NumberFormatException exception) {
+            return null;
+        }
     }
 
     private String text(JsonNode node, String fieldName) {

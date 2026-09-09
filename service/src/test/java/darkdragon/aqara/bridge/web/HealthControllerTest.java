@@ -20,5 +20,7 @@ class HealthControllerTest {
         assertThat(response.status()).isEqualTo("error");
         assertThat(response.rocketmqStarted()).isFalse();
         assertThat(response.lastError()).isEqualTo("access denied");
+        assertThat(response.capabilities()).containsExactly("resource_report", "spec_report");
+        assertThat(response.heartbeatIntervalSeconds()).isEqualTo(15L);
     }
 }

@@ -32,12 +32,49 @@ public class EventBroadcaster {
             );
             return;
         }
+        if (event.statusCode() != 0) {
+            LOGGER.debug(
+                    "Ignoring failed Aqara event subjectId={} resourceId={} statusCode={} msgId={}",
+                    event.subjectId(),
+                    event.resourceId(),
+                    event.statusCode(),
+                    event.msgId()
+            );
+            return;
+        }
+        if (event.time() < 0) {
+            LOGGER.debug(
+                    "Ignoring Aqara event with negative timestamp subjectId={} resourceId={} time={} msgId={}",
+                    event.subjectId(),
+                    event.resourceId(),
+                    event.time(),
+                    event.msgId()
+            );
+            return;
+        }
 
         synchronized (stateLock) {
+            EventKey key = new EventKey(event.subjectId(), event.resourceId());
+            VersionedEvent current = latestEvents.get(key);
+            if (current != null && isOlder(event, current)) {
+                LOGGER.debug(
+                        "Ignoring stale Aqara event subjectId={} resourceId={} time={} latestTime={} msgId={}",
+                        event.subjectId(),
+                        event.resourceId(),
+                        event.time(),
+                        current.latestKnownTime(),
+                        event.msgId()
+                );
+                return;
+            }
             long nextCursor = cursor.incrementAndGet();
+            long latestKnownTime = current == null ? 0L : current.latestKnownTime();
+            if ("spec_report".equals(event.type())) {
+                latestKnownTime = Math.max(latestKnownTime, event.time());
+            }
             latestEvents.put(
-                    new EventKey(event.subjectId(), event.resourceId()),
-                    new VersionedEvent(nextCursor, event)
+                    key,
+                    new VersionedEvent(nextCursor, event, latestKnownTime)
             );
         }
     }
@@ -79,9 +116,16 @@ public class EventBroadcaster {
         return value == null || value.isBlank();
     }
 
+    private boolean isOlder(AqaraEvent candidate, VersionedEvent current) {
+        return "spec_report".equals(candidate.type())
+                && candidate.time() > 0
+                && current.latestKnownTime() > 0
+                && candidate.time() < current.latestKnownTime();
+    }
+
     private record EventKey(String subjectId, String resourceId) {
     }
 
-    private record VersionedEvent(long cursor, AqaraEvent event) {
+    private record VersionedEvent(long cursor, AqaraEvent event, long latestKnownTime) {
     }
 }
