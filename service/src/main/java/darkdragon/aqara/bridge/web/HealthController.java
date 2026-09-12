@@ -30,6 +30,8 @@ public class HealthController {
                 status,
                 bridgeProperties.isRocketmqEnabled(),
                 started,
+                rocketMqHealth.isConsumerRegistered(),
+                rocketMqHealth.getAssignedQueueCount(),
                 rocketMqHealth.getLastMessageAt(),
                 bridgeProperties.getBridgePublicUrl(),
                 bridgeProperties.getMqNamesrvAddr(),

@@ -39,6 +39,7 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(AqaraRocketMqConsumer.class);
     private static final Duration INITIAL_RETRY_DELAY = Duration.ofSeconds(5);
     private static final Duration MAX_RETRY_DELAY = Duration.ofMinutes(5);
+    private static final Duration READINESS_CHECK_INTERVAL = Duration.ofSeconds(15);
 
     private final BridgeProperties bridgeProperties;
     private final RocketMqMessageParser messageParser;
@@ -48,6 +49,7 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
     private final TaskScheduler taskScheduler;
     private DefaultMQPushConsumer consumer;
     private ScheduledFuture<?> retryTask;
+    private ScheduledFuture<?> readinessTask;
     private int retryAttempt;
     private boolean connecting;
     private boolean shuttingDown;
@@ -118,15 +120,15 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
             synchronized (this) {
                 if (!shuttingDown) {
                     consumer = createdConsumer;
-                    accepted = true;
                     retryAttempt = 0;
                     cancelRetryTask();
-                    rocketMqHealth.markStarted();
                     LOGGER.info(
-                            "RocketMQ consumer started for topic {} via {}",
+                            "RocketMQ consumer connected for topic {} via {}; waiting for queue assignment",
                             bridgeProperties.getAppId(),
                             bridgeProperties.getMqNamesrvAddr()
                     );
+                    checkReadiness();
+                    accepted = true;
                 }
             }
         } catch (Exception exception) {
@@ -135,6 +137,11 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
         } finally {
             RuntimeException cleanupFailure = null;
             if (createdConsumer != null && !accepted) {
+                synchronized (this) {
+                    if (consumer == createdConsumer) {
+                        consumer = null;
+                    }
+                }
                 try {
                     consumerFactory.cleanup(createdConsumer);
                 } catch (RuntimeException exception) {
@@ -161,6 +168,7 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
         synchronized (this) {
             shuttingDown = true;
             cancelRetryTask();
+            cancelReadinessTask();
             while (connecting) {
                 try {
                     wait();
@@ -232,6 +240,53 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
         if (retryTask != null) {
             retryTask.cancel(false);
             retryTask = null;
+        }
+    }
+
+    private synchronized void checkReadiness() {
+        readinessTask = null;
+        if (shuttingDown || consumer == null) {
+            return;
+        }
+
+        RocketMqConsumerFactory.ConsumerReadiness readiness;
+        try {
+            readiness = consumerFactory.readiness(consumer, bridgeProperties.getAppId());
+        } catch (RuntimeException exception) {
+            rocketMqHealth.updateReadiness(false, 0);
+            LOGGER.warn("Failed to inspect RocketMQ consumer readiness: {}", exception.getMessage());
+            LOGGER.debug("RocketMQ readiness inspection failure details", exception);
+            scheduleReadinessCheck();
+            return;
+        }
+        boolean changed = rocketMqHealth.updateReadiness(
+                readiness.registered(),
+                readiness.assignedQueueCount()
+        );
+        if (changed) {
+            if (readiness.ready()) {
+                LOGGER.info(
+                        "RocketMQ consumer ready with {} assigned queue(s)",
+                        readiness.assignedQueueCount()
+                );
+            } else {
+                LOGGER.warn("RocketMQ consumer lost all queue assignments");
+            }
+        }
+        scheduleReadinessCheck();
+    }
+
+    private void scheduleReadinessCheck() {
+        readinessTask = taskScheduler.schedule(
+                this::checkReadiness,
+                Instant.now().plus(READINESS_CHECK_INTERVAL)
+        );
+    }
+
+    private synchronized void cancelReadinessTask() {
+        if (readinessTask != null) {
+            readinessTask.cancel(false);
+            readinessTask = null;
         }
     }
 

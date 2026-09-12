@@ -7,6 +7,8 @@ public record HealthResponse(
         String status,
         boolean rocketmqEnabled,
         boolean rocketmqStarted,
+        boolean consumerRegistered,
+        int assignedQueueCount,
         Instant lastMessageAt,
         String publicUrl,
         String nameserver,

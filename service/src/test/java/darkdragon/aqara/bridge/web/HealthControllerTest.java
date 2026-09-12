@@ -23,4 +23,19 @@ class HealthControllerTest {
         assertThat(response.capabilities()).containsExactly("resource_report", "spec_report");
         assertThat(response.heartbeatIntervalSeconds()).isEqualTo(15L);
     }
+
+    @Test
+    void readyConsumerIncludesQueueAssignmentDiagnostics() {
+        BridgeProperties properties = new BridgeProperties();
+        properties.setRocketmqEnabled(true);
+        RocketMqHealth health = new RocketMqHealth();
+        health.updateReadiness(true, 2);
+
+        var response = new HealthController(properties, health).health();
+
+        assertThat(response.status()).isEqualTo("up");
+        assertThat(response.rocketmqStarted()).isTrue();
+        assertThat(response.consumerRegistered()).isTrue();
+        assertThat(response.assignedQueueCount()).isEqualTo(2);
+    }
 }

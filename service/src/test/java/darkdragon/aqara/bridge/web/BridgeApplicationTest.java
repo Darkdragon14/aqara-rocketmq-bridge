@@ -48,6 +48,8 @@ class BridgeApplicationTest {
                 .jsonPath("$.publicUrl").isEqualTo("https://aqara.darkdragon.fr")
                 .jsonPath("$.topic").doesNotExist()
                 .jsonPath("$.rocketmqEnabled").isEqualTo(false)
+                .jsonPath("$.consumerRegistered").isEqualTo(false)
+                .jsonPath("$.assignedQueueCount").isEqualTo(0)
                 .jsonPath("$.capabilities[0]").isEqualTo("resource_report")
                 .jsonPath("$.capabilities[1]").isEqualTo("spec_report")
                 .jsonPath("$.heartbeatIntervalSeconds").isEqualTo(15);

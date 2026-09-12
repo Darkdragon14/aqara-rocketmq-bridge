@@ -93,6 +93,9 @@ class AqaraRocketMqConsumerTest {
                 consumerFactory,
                 taskScheduler
         );
+        org.mockito.Mockito.lenient().when(consumerFactory.readiness(any(), anyString())).thenReturn(
+                new RocketMqConsumerFactory.ConsumerReadiness(true, 1)
+        );
     }
 
     @Test
@@ -155,6 +158,21 @@ class AqaraRocketMqConsumerTest {
         verify(taskScheduler, never()).schedule(any(Runnable.class), any(Instant.class));
         assertThat(health.isFailed()).isTrue();
         assertThat(health.getLastError()).isEqualTo("cleanup failed");
+    }
+
+    @Test
+    void readinessSchedulerFailureCleansUpConnectedConsumer() throws Exception {
+        DefaultMQPushConsumer connectedConsumer = mock(DefaultMQPushConsumer.class);
+        when(consumerFactory.create(anyString(), any())).thenReturn(connectedConsumer);
+        doThrow(new IllegalStateException("scheduler unavailable"))
+                .when(taskScheduler).schedule(any(Runnable.class), any(Instant.class));
+
+        assertThatThrownBy(() -> rocketMqConsumer.run(mock(ApplicationArguments.class)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("scheduler unavailable");
+
+        verify(consumerFactory).cleanup(connectedConsumer);
+        assertThat(health.isStarted()).isFalse();
     }
 
     @Test
@@ -433,7 +451,7 @@ class AqaraRocketMqConsumerTest {
     }
 
     @Test
-    void realConsumerRecoversAfterBrokerBecomesReachable(CapturedOutput output) throws Exception {
+    void realConsumerConnectionRecoversButWaitsForQueueAssignment(CapturedOutput output) throws Exception {
         NettyRemotingServer broker = remotingServer();
         broker.registerProcessor(RequestCode.HEART_BEAT, successProcessor(), null);
         broker.registerProcessor(RequestCode.UNREGISTER_CLIENT, successProcessor(), null);
@@ -482,8 +500,10 @@ class AqaraRocketMqConsumerTest {
             currentRoute.set(topicRoute("127.0.0.1:" + broker.localListenPort()));
             retry.getValue().run();
 
-            assertThat(reconnectHealth.isStarted()).isTrue();
-            assertThat(reconnectHealth.getLastError()).isNull();
+            assertThat(reconnectHealth.isStarted()).isFalse();
+            assertThat(reconnectHealth.isConsumerRegistered()).isTrue();
+            assertThat(reconnectHealth.getAssignedQueueCount()).isZero();
+            assertThat(reconnectHealth.getLastError()).contains("no assigned queues");
         } finally {
             reconnectingConsumer.stopConsumer();
             nameserver.shutdown();

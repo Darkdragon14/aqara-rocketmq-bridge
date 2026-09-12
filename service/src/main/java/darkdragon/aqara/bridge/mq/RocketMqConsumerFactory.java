@@ -43,6 +43,24 @@ class RocketMqConsumerFactory {
         return consumer;
     }
 
+    ConsumerReadiness readiness(DefaultMQPushConsumer consumer, String topic) {
+        DefaultMQPushConsumerImpl implementation = consumer.getDefaultMQPushConsumerImpl();
+        MQClientInstance client = implementation.getmQClientFactory();
+        boolean registered = client != null
+                && client.selectConsumer(consumer.getConsumerGroup()) == implementation;
+        int assignedQueueCount = (int) implementation.getRebalanceImpl().getProcessQueueTable().keySet().stream()
+                .filter(queue -> topic.equals(queue.getTopic()))
+                .count();
+        return new ConsumerReadiness(registered, assignedQueueCount);
+    }
+
+    record ConsumerReadiness(boolean registered, int assignedQueueCount) {
+
+        boolean ready() {
+            return registered && assignedQueueCount > 0;
+        }
+    }
+
     void validateConnection(DefaultMQPushConsumer consumer, String topic) throws Exception {
         try {
             validateConnectionInterruptibly(consumer, topic);

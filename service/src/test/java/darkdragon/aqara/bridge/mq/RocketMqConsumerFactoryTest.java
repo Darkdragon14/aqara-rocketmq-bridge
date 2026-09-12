@@ -8,8 +8,10 @@ import org.apache.rocketmq.client.impl.MQClientAPIImpl;
 import org.apache.rocketmq.client.impl.MQClientManager;
 import org.apache.rocketmq.client.impl.consumer.ConsumeMessageConcurrentlyService;
 import org.apache.rocketmq.client.impl.consumer.DefaultMQPushConsumerImpl;
+import org.apache.rocketmq.client.impl.consumer.ProcessQueue;
 import org.apache.rocketmq.client.impl.factory.MQClientInstance;
 import org.apache.rocketmq.common.ServiceState;
+import org.apache.rocketmq.common.message.MessageQueue;
 import org.apache.rocketmq.common.protocol.ResponseCode;
 import org.apache.rocketmq.common.protocol.route.BrokerData;
 import org.apache.rocketmq.common.protocol.route.TopicRouteData;
@@ -81,6 +83,35 @@ class RocketMqConsumerFactoryTest {
         DefaultMQPushConsumer second = consumerFactory.create("test-app", null);
 
         assertThat(first.buildMQClientId()).isNotEqualTo(second.buildMQClientId());
+    }
+
+    @Test
+    void readinessRequiresRegistrationAndAssignedQueue() {
+        DefaultMQPushConsumer consumer = mock(DefaultMQPushConsumer.class);
+        DefaultMQPushConsumerImpl implementation = mock(DefaultMQPushConsumerImpl.class);
+        MQClientInstance client = mock(MQClientInstance.class);
+        org.apache.rocketmq.client.impl.consumer.RebalanceImpl rebalance =
+                mock(org.apache.rocketmq.client.impl.consumer.RebalanceImpl.class);
+        when(consumer.getDefaultMQPushConsumerImpl()).thenReturn(implementation);
+        when(consumer.getConsumerGroup()).thenReturn("test-app");
+        when(implementation.getmQClientFactory()).thenReturn(client);
+        when(implementation.getRebalanceImpl()).thenReturn(rebalance);
+        when(client.selectConsumer("test-app")).thenReturn(implementation);
+        ConcurrentHashMap<MessageQueue, ProcessQueue> assignments = new ConcurrentHashMap<>();
+        assignments.put(new MessageQueue("%RETRY%test-app", "broker", 0), new ProcessQueue());
+        when(rebalance.getProcessQueueTable()).thenReturn(assignments);
+
+        RocketMqConsumerFactory.ConsumerReadiness readiness = consumerFactory.readiness(consumer, "test-app");
+
+        assertThat(readiness.registered()).isTrue();
+        assertThat(readiness.assignedQueueCount()).isZero();
+        assertThat(readiness.ready()).isFalse();
+
+        assignments.put(new MessageQueue("test-app", "broker", 0), new ProcessQueue());
+        readiness = consumerFactory.readiness(consumer, "test-app");
+
+        assertThat(readiness.assignedQueueCount()).isEqualTo(1);
+        assertThat(readiness.ready()).isTrue();
     }
 
     @Test
