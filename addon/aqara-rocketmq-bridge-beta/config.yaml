@@ -1,5 +1,5 @@
 name: Aqara RocketMQ Bridge Beta
-version: 1.2.0-beta.1
+version: 1.2.0-beta.3
 slug: aqara_rocketmq_bridge_beta
 description: Experimental Aqara RocketMQ bridge for Home Assistant
 url: https://github.com/Darkdragon14/aqara-rocketmq-bridge
