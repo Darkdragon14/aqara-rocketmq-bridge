@@ -38,4 +38,44 @@ class HealthControllerTest {
         assertThat(response.consumerRegistered()).isTrue();
         assertThat(response.assignedQueueCount()).isEqualTo(2);
     }
+
+    @Test
+    void includesMessagePipelineDiagnostics() {
+        BridgeProperties properties = new BridgeProperties();
+        properties.setRocketmqEnabled(true);
+        RocketMqHealth health = new RocketMqHealth();
+        health.updateReadiness(true, 2);
+        health.markRawMessageReceived();
+        health.markMessageIgnored("device_online", "unsupported_msg_type");
+        health.markRawMessageReceived();
+        health.markMessageParsed("spec_report");
+        health.markEventsPublished(2);
+
+        var response = new HealthController(properties, health).health();
+
+        assertThat(response.rawMessageCount()).isEqualTo(2);
+        assertThat(response.parsedMessageCount()).isOne();
+        assertThat(response.publishedEventCount()).isEqualTo(2);
+        assertThat(response.ignoredMessageCount()).isOne();
+        assertThat(response.lastRawMessageAt()).isNotNull();
+        assertThat(response.lastParsedMessageAt()).isNotNull();
+        assertThat(response.lastPublishedEventAt()).isNotNull();
+        assertThat(response.lastMessageAt()).isEqualTo(response.lastPublishedEventAt());
+        assertThat(response.lastMessageType()).isEqualTo("spec_report");
+        assertThat(response.lastIgnoredReason()).isEqualTo("unsupported_msg_type");
+    }
+
+    @Test
+    void readinessRecoveryDoesNotEraseProcessingError() {
+        BridgeProperties properties = new BridgeProperties();
+        properties.setRocketmqEnabled(true);
+        RocketMqHealth health = new RocketMqHealth();
+        health.markError("invalid payload");
+        health.updateReadiness(true, 2);
+
+        var response = new HealthController(properties, health).health();
+
+        assertThat(response.lastError()).isEqualTo("invalid payload");
+        assertThat(response.processingErrorCount()).isOne();
+    }
 }

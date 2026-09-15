@@ -4,10 +4,13 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import darkdragon.aqara.bridge.config.BridgeProperties;
+import darkdragon.aqara.bridge.model.AqaraEvent;
 import darkdragon.aqara.bridge.stream.EventBroadcaster;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.rocketmq.acl.common.SessionCredentials;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.constant.PermName;
@@ -16,6 +19,7 @@ import org.apache.rocketmq.common.protocol.ResponseCode;
 import org.apache.rocketmq.common.protocol.route.BrokerData;
 import org.apache.rocketmq.common.protocol.route.QueueData;
 import org.apache.rocketmq.common.protocol.route.TopicRouteData;
+import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.remoting.exception.RemotingCommandException;
 import org.apache.rocketmq.remoting.exception.RemotingSendRequestException;
 import org.apache.rocketmq.remoting.netty.NettyRemotingServer;
@@ -142,6 +146,91 @@ class AqaraRocketMqConsumerTest {
         verify(consumerFactory, times(2)).create(anyString(), any());
         assertThat(health.isStarted()).isTrue();
         assertThat(health.getLastError()).isNull();
+    }
+
+    @Test
+    void recordsRawParsedAndPublishedMessageDiagnostics() throws Exception {
+        DefaultMQPushConsumer consumer = mock(DefaultMQPushConsumer.class);
+        MessageExt message = new MessageExt();
+        message.setBody("payload".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        AqaraEvent event = new AqaraEvent(
+                "spec_report", "matt.u200", "2.DoorLock.LockState", 1, 100L, 0,
+                null, null, "message", "open"
+        );
+        when(consumerFactory.create(anyString(), any())).thenReturn(consumer);
+        when(messageParser.parseDetailed("payload")).thenReturn(
+                new RocketMqMessageParser.ParseResult("spec_report", List.of(event), null)
+        );
+
+        rocketMqConsumer.run(mock(ApplicationArguments.class));
+        ArgumentCaptor<MessageListenerConcurrently> listener =
+                ArgumentCaptor.forClass(MessageListenerConcurrently.class);
+        verify(consumer).registerMessageListener(listener.capture());
+
+        ConsumeConcurrentlyStatus status = listener.getValue().consumeMessage(List.of(message), null);
+
+        assertThat(status).isEqualTo(ConsumeConcurrentlyStatus.CONSUME_SUCCESS);
+        verify(eventBroadcaster).publish(event);
+        assertThat(health.getRawMessageCount()).isOne();
+        assertThat(health.getParsedMessageCount()).isOne();
+        assertThat(health.getPublishedEventCount()).isOne();
+        assertThat(health.getIgnoredMessageCount()).isZero();
+    }
+
+    @Test
+    void recordsIgnoredRocketMqMessagesWithoutPublishing() throws Exception {
+        DefaultMQPushConsumer consumer = mock(DefaultMQPushConsumer.class);
+        MessageExt message = new MessageExt();
+        message.setBody("payload".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        when(consumerFactory.create(anyString(), any())).thenReturn(consumer);
+        when(messageParser.parseDetailed("payload")).thenReturn(
+                new RocketMqMessageParser.ParseResult("device_online", List.of(), "unsupported_msg_type")
+        );
+
+        rocketMqConsumer.run(mock(ApplicationArguments.class));
+        ArgumentCaptor<MessageListenerConcurrently> listener =
+                ArgumentCaptor.forClass(MessageListenerConcurrently.class);
+        verify(consumer).registerMessageListener(listener.capture());
+
+        ConsumeConcurrentlyStatus status = listener.getValue().consumeMessage(List.of(message), null);
+
+        assertThat(status).isEqualTo(ConsumeConcurrentlyStatus.CONSUME_SUCCESS);
+        verify(eventBroadcaster, never()).publish(any());
+        assertThat(health.getRawMessageCount()).isOne();
+        assertThat(health.getParsedMessageCount()).isZero();
+        assertThat(health.getIgnoredMessageCount()).isOne();
+        assertThat(health.getLastIgnoredReason()).isEqualTo("unsupported_msg_type");
+    }
+
+    @Test
+    void distinguishesParsedMessagesFromPublishFailures() throws Exception {
+        DefaultMQPushConsumer consumer = mock(DefaultMQPushConsumer.class);
+        MessageExt message = new MessageExt();
+        message.setBody("payload".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        AqaraEvent event = new AqaraEvent(
+                "spec_report", "matt.u200", "2.DoorLock.LockState", 1, 100L, 0,
+                null, null, "message", "open"
+        );
+        when(consumerFactory.create(anyString(), any())).thenReturn(consumer);
+        when(messageParser.parseDetailed("payload")).thenReturn(
+                new RocketMqMessageParser.ParseResult("spec_report", List.of(event), null)
+        );
+        doThrow(new IllegalStateException("SSE publication failed"))
+                .when(eventBroadcaster).publish(event);
+
+        rocketMqConsumer.run(mock(ApplicationArguments.class));
+        ArgumentCaptor<MessageListenerConcurrently> listener =
+                ArgumentCaptor.forClass(MessageListenerConcurrently.class);
+        verify(consumer).registerMessageListener(listener.capture());
+
+        ConsumeConcurrentlyStatus status = listener.getValue().consumeMessage(List.of(message), null);
+
+        assertThat(status).isEqualTo(ConsumeConcurrentlyStatus.RECONSUME_LATER);
+        assertThat(health.getRawMessageCount()).isOne();
+        assertThat(health.getParsedMessageCount()).isOne();
+        assertThat(health.getPublishedEventCount()).isZero();
+        assertThat(health.getProcessingErrorCount()).isOne();
+        assertThat(health.getLastError()).isEqualTo("SSE publication failed");
     }
 
     @Test

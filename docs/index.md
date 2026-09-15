@@ -361,7 +361,19 @@ Typical fields:
   "status": "up",
   "rocketmqEnabled": true,
   "rocketmqStarted": true,
+  "consumerRegistered": true,
+  "assignedQueueCount": 8,
   "lastMessageAt": "2026-04-10T10:00:00Z",
+  "lastRawMessageAt": "2026-04-10T10:00:00Z",
+  "lastParsedMessageAt": "2026-04-10T10:00:00Z",
+  "lastPublishedEventAt": "2026-04-10T10:00:00Z",
+  "rawMessageCount": 12,
+  "parsedMessageCount": 10,
+  "publishedEventCount": 14,
+  "ignoredMessageCount": 2,
+  "processingErrorCount": 0,
+  "lastMessageType": "spec_report",
+  "lastIgnoredReason": "unsupported_msg_type",
   "publicUrl": "https://bridge.example.com",
   "nameserver": "your-message-push-nameserver",
   "lastError": null,
@@ -376,6 +388,13 @@ Interpretation:
 - `starting`: the bridge is up, but RocketMQ is not ready yet;
 - `error`: RocketMQ could not start because of a non-retryable configuration or authentication error;
 - `degraded`: RocketMQ was disabled by configuration.
+- `consumerRegistered` and `assignedQueueCount`: the consumer is registered and owns queues, but
+  these fields alone do not prove that Aqara is publishing messages.
+- `rawMessageCount`: messages delivered by RocketMQ before decoding or filtering.
+- `parsedMessageCount` and `publishedEventCount`: supported messages and events relayed to SSE.
+- `ignoredMessageCount` and `lastIgnoredReason`: messages intentionally filtered by the bridge.
+- `processingErrorCount`: malformed messages or failures while publishing parsed events.
+- `lastMessageAt` remains an alias for `lastPublishedEventAt` for compatibility.
 - `capabilities`: message formats this bridge version can relay over SSE.
 - `heartbeatIntervalSeconds`: expected interval between SSE keepalive messages.
 

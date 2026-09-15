@@ -19,10 +19,14 @@ public class RocketMqMessageParser {
     }
 
     public List<AqaraEvent> parse(String payload) throws IOException {
+        return parseDetailed(payload).events();
+    }
+
+    public ParseResult parseDetailed(String payload) throws IOException {
         JsonNode root = objectMapper.readTree(payload);
         String msgType = text(root, "msgType");
         if (!"resource_report".equals(msgType) && !"spec_report".equals(msgType)) {
-            return List.of();
+            return new ParseResult(msgType, List.of(), "unsupported_msg_type");
         }
 
         String msgId = text(root, "msgId");
@@ -31,7 +35,7 @@ public class RocketMqMessageParser {
 
         JsonNode data = root.path("data");
         if (!data.isArray()) {
-            return List.of();
+            return new ParseResult(msgType, List.of(), "invalid_data");
         }
 
         for (JsonNode item : data) {
@@ -63,7 +67,18 @@ public class RocketMqMessageParser {
             ));
         }
 
-        return events;
+        return new ParseResult(
+                msgType,
+                List.copyOf(events),
+                events.isEmpty() ? "no_valid_events" : null
+        );
+    }
+
+    public record ParseResult(String messageType, List<AqaraEvent> events, String ignoredReason) {
+
+        public boolean ignored() {
+            return events.isEmpty();
+        }
     }
 
     private String traitCodePath(JsonNode item) {

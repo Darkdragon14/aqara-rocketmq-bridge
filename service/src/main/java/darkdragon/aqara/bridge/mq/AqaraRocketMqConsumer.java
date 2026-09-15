@@ -334,15 +334,29 @@ public class AqaraRocketMqConsumer implements ApplicationRunner {
                 ConsumeConcurrentlyContext context
         ) {
             for (MessageExt message : messages) {
+                rocketMqHealth.markRawMessageReceived();
                 try {
                     String payload = new String(message.getBody(), StandardCharsets.UTF_8);
-                    List<AqaraEvent> events = messageParser.parse(payload);
-                    for (AqaraEvent event : events) {
+                    RocketMqMessageParser.ParseResult result = messageParser.parseDetailed(payload);
+                    if (result.ignored()) {
+                        rocketMqHealth.markMessageIgnored(result.messageType(), result.ignoredReason());
+                        LOGGER.debug(
+                                "Ignored RocketMQ message: type={} reason={}",
+                                result.messageType(),
+                                result.ignoredReason()
+                        );
+                        continue;
+                    }
+                    rocketMqHealth.markMessageParsed(result.messageType());
+                    for (AqaraEvent event : result.events()) {
                         eventBroadcaster.publish(event);
                     }
-                    if (!events.isEmpty()) {
-                        rocketMqHealth.markMessageReceived();
-                    }
+                    rocketMqHealth.markEventsPublished(result.events().size());
+                    LOGGER.debug(
+                            "Published {} event(s) from RocketMQ message type={}",
+                            result.events().size(),
+                            result.messageType()
+                    );
                 } catch (Exception exception) {
                     rocketMqHealth.markError(exception);
                     LOGGER.warn("Failed to process RocketMQ message", exception);

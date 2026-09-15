@@ -88,6 +88,29 @@ class RocketMqMessageParserTest {
     }
 
     @Test
+    void reportsWhyUnsupportedMessagesAreIgnored() throws Exception {
+        RocketMqMessageParser.ParseResult result = parser.parseDetailed("""
+                {"msgType":"device_online","data":[]}
+                """);
+
+        assertThat(result.messageType()).isEqualTo("device_online");
+        assertThat(result.events()).isEmpty();
+        assertThat(result.ignoredReason()).isEqualTo("unsupported_msg_type");
+        assertThat(result.ignored()).isTrue();
+    }
+
+    @Test
+    void reportsWhenSupportedMessagesContainNoValidEvents() throws Exception {
+        RocketMqMessageParser.ParseResult result = parser.parseDetailed("""
+                {"msgType":"spec_report","data":[{"statusCode":"0"}]}
+                """);
+
+        assertThat(result.messageType()).isEqualTo("spec_report");
+        assertThat(result.events()).isEmpty();
+        assertThat(result.ignoredReason()).isEqualTo("no_valid_events");
+    }
+
+    @Test
     void rejectsItemsWithoutAnIntegerStatusCode() throws Exception {
         String payload = """
                 {
